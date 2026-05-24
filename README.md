@@ -28,10 +28,15 @@ Pre-built binaries for macOS, Linux, and Windows from [Releases](https://github.
 - **Hermes CLI** — https://github.com/nousresearch/hermes-agent (for AI analysis)
 - **SerpAPI key** — https://serpapi.com (free tier available)
 
+**One-liner:** `./dep-install.sh` installs everything except Hermes + SerpAPI key.
+
 ```bash
 # Clone
 git clone https://github.com/purfect-labs/jobdash.git
 cd jobdash
+
+# Install system dependencies
+./dep-install.sh
 
 # Install frontend deps
 cd frontend && npm install && cd ..
