@@ -39,3 +39,6 @@ Thumbs.db
 
 # Graphify cache (evo)
 graphify-out/
+
+# Test coverage
+coverage.out

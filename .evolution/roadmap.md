@@ -110,3 +110,10 @@ Started: 2026-05-24
 Completed: 2026-05-24
 Assigned: @shawnM
 dep-install.sh for macOS/Linux. README with prerequisite table, Hermes + SerpAPI setup guides, 5 screenshots. Build-from-source instructions.
+
+### C.7-shawnM Test Coverage `completed` <!-- UUID: c1d2e3f4-7777-4ccc-7777-777777777777 -->
+Created: 2026-05-24
+Started: 2026-05-24
+Completed: 2026-05-24
+Assigned: @shawnM
+Unit tests for db (82%), scraper (29%), main (5%). 24 tests total. In-memory SQLite for db tests. README badges for Go, license, release, Evo.
