@@ -10,7 +10,6 @@ permissions:
 
 jobs:
   build:
-    # Skip the auto-increment commit itself (the release job handles it)
     name: jobdash ${{ matrix.os }}-${{ matrix.arch }}
     runs-on: ${{ matrix.runner }}
     strategy:
@@ -35,6 +34,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-go@v5
         with:
@@ -50,28 +51,15 @@ jobs:
       - name: Build frontend
         run: cd frontend && npm run build
 
-      - name: Get version info
+      - name: Get version
         id: version
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           sha="$(git rev-parse --short HEAD)"
-          # On tag push — use the tag name
-          # On branch push — auto-increment last tag's patch version
-          ref="${GITHUB_REF#refs/tags/}"
-          if [ "$ref" != "$GITHUB_REF" ] && [ -n "$ref" ]; then
-            tag="$ref"
-          else
-            last_tag="$(git describe --tags --abbrev=0 2>/dev/null || echo 'v0')"
-            maj="$(echo "$last_tag" | sed 's/^v//' | cut -d. -f1)"
-            maj=$((maj + 1))
-            tag="v${maj}"
-            git config user.name "github-actions"
-            git config user.email "actions@github.com"
-            git tag "$tag"
-            git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" "$tag"
-          fi
-          echo "tag=$tag" >> $GITHUB_OUTPUT
+          # Get the highest existing release tag, strip 'v', bump major
+          last_tag="$(gh release list --limit 1 --json tagName --jq '.[0].tagName' 2>/dev/null || echo 'v0')"
+          maj="$(echo "$last_tag" | sed 's/^v//' | cut -d. -f1)"
+          maj=$((maj + 1))
+          echo "tag=v${maj}" >> $GITHUB_OUTPUT
           echo "sha=$sha" >> $GITHUB_OUTPUT
 
       - name: Build (macOS)
@@ -140,6 +128,10 @@ jobs:
         run: |
           set -euo pipefail
           tag="${{ steps.version.outputs.tag }}"
+          # Create the release (no tag exists yet)
+          gh release create "$tag" --title "JobDash $tag" \
+            --notes "Auto-built from main@${{ steps.version.outputs.sha }}" \
+            2>/dev/null || true
           for f in jobdash-$tag-*; do
             [ -f "$f" ] || continue
             echo "Uploading: $f"
