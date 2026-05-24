@@ -3,6 +3,11 @@ name: Release
 on:
   push:
     tags: ['v*']
+    branches: [main]
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -51,8 +56,12 @@ jobs:
       - name: Get version info
         id: version
         run: |
-          echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-          echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          tag="${GITHUB_REF#refs/tags/}"
+          sha="$(git rev-parse --short HEAD)"
+          # Only set tag if this is actually a tag push
+          if [ "$tag" = "$GITHUB_REF" ]; then tag=""; fi
+          echo "tag=$tag" >> $GITHUB_OUTPUT
+          echo "sha=$sha" >> $GITHUB_OUTPUT
 
       - name: Build (macOS)
         if: runner.os == 'macOS'
@@ -120,8 +129,15 @@ jobs:
         run: |
           set -euo pipefail
           tag="${{ steps.version.outputs.tag }}"
-          for f in jobdash-$tag-*; do
+          # On tag push — upload to that tag's release
+          # On main push — upload to 'nightly' release
+          if [ -z "$tag" ] || [ "$tag" = "" ]; then
+            tag="nightly"
+            # Create or get nightly release
+            gh release create "$tag" --title "Nightly Build (${{ github.sha }})" --notes "Auto-built from main@${{ github.sha }}" 2>/dev/null || true
+          fi
+          for f in jobdash-nightly-* jobdash-$tag-*; do
             [ -f "$f" ] || continue
-            echo "Uploading: $f"
-            gh release upload "$tag" "$f" --clobber
+            echo "Uploading: $f to $tag"
+            gh release upload "$tag" "$f" --clobber 2>/dev/null || true
           done
