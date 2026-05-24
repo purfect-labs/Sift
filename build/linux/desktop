@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=My Product
+Comment=A jobdash application
+# The Exec line includes %u to pass the URL to the application
+Exec=/usr/local/bin/jobdash %u
+Terminal=false
+Type=Application
+Icon=jobdash
+Categories=Utility;
+StartupWMClass=jobdash
+
+ 

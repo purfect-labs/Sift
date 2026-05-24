@@ -1,0 +1,41 @@
+# Binaries
+bin/
+build/bin/
+*.exe
+*.dmg
+*.app
+
+# Dependencies
+frontend/node_modules/
+
+# Build artifacts
+frontend/dist/
+.task/
+
+# Gradle
+build/android/.gradle/
+build/android/gradle/wrapper/gradle-wrapper.jar
+build/android/local.properties
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+*.key
+*.pem
+
+# Data
+*.db
+*.sqlite
+*.pdf
+
+# Graphify cache (evo)
+graphify-out/
