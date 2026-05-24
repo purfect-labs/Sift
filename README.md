@@ -15,32 +15,48 @@ Built with [Wails v3](https://v3.wails.io/) (Go + Svelte).
 - **Pipeline Tracking** — Full pipeline: New → Saved → Applied → Interviewing → Offer.
 - **100% Local** — SQLite database, no cloud accounts, no data leaves your machine.
 
+## Download
+
+Pre-built binaries for macOS, Linux, and Windows from [Releases](https://github.com/purfect-labs/jobdash/releases).
+
 ## Quick Start
 
-```bash
-# Prerequisites
-# - Go 1.25+
-# - Python 3 + pymupdf (for PDF resume parsing)
-# - Hermes CLI (for AI analysis) — https://github.com/nousresearch/hermes-agent
-# - SerpAPI key — https://serpapi.com
+### Prerequisites
+- **Go 1.25+** — https://go.dev/dl/
+- **Node.js 22+** — https://nodejs.org/
+- **Python 3 + pymupdf** — `pip install pymupdf` (for PDF resume parsing)
+- **Hermes CLI** — https://github.com/nousresearch/hermes-agent (for AI analysis)
+- **SerpAPI key** — https://serpapi.com (free tier available)
 
+```bash
 # Clone
-git clone https://github.com/plabs/jobdash.git
+git clone https://github.com/purfect-labs/jobdash.git
 cd jobdash
 
 # Install frontend deps
 cd frontend && npm install && cd ..
 
 # Run in dev mode
+go install github.com/wailsapp/wails/v3/cmd/wails3@latest
 wails3 dev
 
 # Build for production
 task build
 ```
 
+### Build from source (no Wails CLI)
+
+```bash
+cd frontend && npm install && npm run build && cd ..
+CGO_ENABLED=1 go build -o jobdash .
+./jobdash
+```
+
+The frontend must be built first (`npm run build`) so it's embedded in the Go binary.
+
 ## Configuration
 
-Create `~/.jobdash/.env`:
+Paste your SerpAPI key in the Settings panel, or create `~/.jobdash/.env`:
 ```
 SERP_API_KEY=your_serpapi_key
 ```

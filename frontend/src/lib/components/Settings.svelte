@@ -47,11 +47,15 @@
 
   <div class="setting-group env-status">
     <label>SerpAPI Key</label>
-    {#if config.serpapi_key}
-      <span class="env-ok">&#10003; Loaded from .env</span>
-    {:else}
-      <span class="env-err">&#10007; Add <code>SERP_API_KEY=your-key</code> to ~/.jobdash/.env</span>
-    {/if}
+    <div class="api-key-row">
+      <input type="password" bind:value={config.serpapi_key} placeholder="Paste your SerpAPI key here" class="setting-input api-key-input" />
+      <button class="btn btn-save-key" on:click={() => JobService.SetConfig('serpapi_key', config.serpapi_key).then(() => saved = true).catch(e => console.error(e))}>
+        Save Key
+      </button>
+    </div>
+    <span class="env-msg" class:ok={config.serpapi_key} class:err={!config.serpapi_key}>
+      {config.serpapi_key ? '✓ Key saved' : '✗ Paste your SerpAPI key above'}
+    </span>
   </div>
 
   <div class="setting-group">
@@ -108,6 +112,13 @@
   .env-ok { font-size: 12px; color: #66bb6a; }
   .env-err { font-size: 12px; color: #ef5350; }
   .env-err code { background: #1a1d30; padding: 1px 6px; border-radius: 3px; font-size: 11px; }
+  .env-msg { font-size: 12px; }
+  .env-msg.ok { color: #66bb6a; }
+  .env-msg.err { color: #ef5350; }
+  .api-key-row { display: flex; gap: 8px; }
+  .api-key-input { flex: 1; }
+  .btn-save-key { background: #2a3a8a; color: #ccd5ff; padding: 8px 14px; }
+  .btn-save-key:hover { background: #3450b0; }
   .setting-input { width: 100%; background: #151828; border: 1px solid #1e2240; color: #ccc; padding: 10px 14px; border-radius: 6px; font-size: 13px; outline: none; font-family: monospace; }
   .setting-input:focus { border-color: #3a4480; }
   .resume-row { display: flex; gap: 8px; }

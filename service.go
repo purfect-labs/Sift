@@ -112,6 +112,26 @@ func (s *JobService) SetConfig(key, value string) error {
 			s.keywords = kw
 			s.config.Keywords = kw
 		}
+	case "serpapi_key":
+		s.config.SerpAPIKey = value
+		home, _ := os.UserHomeDir()
+		envPath := filepath.Join(home, ".jobdash", ".env")
+		os.MkdirAll(filepath.Dir(envPath), 0700)
+		// Read existing .env, update SERP_API_KEY line, write back
+		existing, _ := os.ReadFile(envPath)
+		lines := strings.Split(string(existing), "\n")
+		found := false
+		for i, line := range lines {
+			if strings.HasPrefix(strings.TrimSpace(line), "SERP_API_KEY=") {
+				lines[i] = "SERP_API_KEY=" + value
+				found = true
+				break
+			}
+		}
+		if !found {
+			lines = append(lines, "SERP_API_KEY="+value)
+		}
+		return os.WriteFile(envPath, []byte(strings.Join(lines, "\n")), 0600)
 	}
 	return nil
 }
