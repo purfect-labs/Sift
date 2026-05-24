@@ -26,6 +26,7 @@ type Config struct {
 type JobService struct {
 	config   Config
 	keywords []string
+	logs     []string
 	app      *application.App
 }
 
@@ -48,7 +49,15 @@ func loadEnv(path string) map[string]string {
 	return env
 }
 
+func safeSlice(s string, n int) string {
+	if len(s) <= n {
+		return s
+	}
+	return s[:n]
+}
+
 func (s *JobService) log(msg string) {
+	s.logs = append(s.logs, msg)
 	if s.app != nil {
 		s.app.Event.Emit("scrape_log", msg)
 	}
@@ -164,9 +173,9 @@ func (s *JobService) RecommendPositions() ([]string, error) {
 		`Read this resume and output ONLY a comma-separated list of 5-8 specific job titles this person should target. Be specific: use real titles like "Director of Platform Engineering" not generic ones. Output only the comma list.
 
 RESUME:
-%s`, fullText[:5000])
+%s`, safeSlice(fullText, 5000))
 
-	cmd := exec.Command("hermes", "-z", prompt)
+	cmd := exec.Command(scraper.HermesBin(), "-z", prompt)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		s.log(fmt.Sprintf("Hermes error: %v", err))
@@ -184,7 +193,7 @@ RESUME:
 	}
 
 	if len(titles) < 3 {
-		return nil, fmt.Errorf("Hermes returned too few titles: %s", response[:200])
+		return nil, fmt.Errorf("Hermes returned too few titles: %s", safeSlice(response, 200))
 	}
 
 	db.SavePositions(titles)
@@ -193,13 +202,14 @@ RESUME:
 }
 
 func (s *JobService) ExtractResume(resumePath string) (*ScrapeResult, error) {
+	s.logs = nil // clear previous logs
 	s.log(fmt.Sprintf("Reading resume: %s", resumePath))
 	s.log("Sending to Hermes for keyword extraction...")
 
 	keywords, text, err := scraper.ExtractKeywordsFromPDF(resumePath)
 	if err != nil {
 		s.log(fmt.Sprintf("ERROR: %v", err))
-		return nil, err
+		return &ScrapeResult{Errors: []string{err.Error()}}, nil
 	}
 
 	db.SaveKeywords("resume", keywords)
@@ -210,7 +220,12 @@ func (s *JobService) ExtractResume(resumePath string) (*ScrapeResult, error) {
 	s.config.ResumePath = resumePath
 
 	s.log(fmt.Sprintf("Extracted %d keywords: %s", len(keywords), strings.Join(keywords[:min(10, len(keywords))], ", ")+"..."))
-	return &ScrapeResult{JobsFound: len(keywords), Errors: nil}, nil
+	return &ScrapeResult{JobsFound: len(keywords), Errors: s.logs}, nil
+}
+
+// GetExtractLog returns the accumulated log from the last extraction
+func (s *JobService) GetExtractLog() []string {
+	return s.logs
 }
 
 type ScrapeResult struct {
@@ -381,7 +396,7 @@ RESUME: %s
 
 JOB: %s`, resumeSummary, jobText)
 
-	cmd := exec.Command("hermes", "-z", prompt)
+	cmd := exec.Command(scraper.HermesBin(), "-z", prompt)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return "", nil
@@ -536,7 +551,7 @@ RESUME KEYWORDS: %s
 JOBS:
 %s`, resumeSummary, strings.Join(jobList, "\n---\n"))
 
-		cmd := exec.Command("hermes", "-z", prompt)
+		cmd := exec.Command(scraper.HermesBin(), "-z", prompt)
 		out, err := cmd.CombinedOutput()
 		if err != nil {
 			s.log(fmt.Sprintf("Rating batch %d failed: %v", i/10, err))
@@ -602,7 +617,7 @@ RESUME: %s
 JOBS:
 %s`, resumeSummary, strings.Join(jobList, "\n---\n"))
 
-		cmd := exec.Command("hermes", "-z", prompt)
+		cmd := exec.Command(scraper.HermesBin(), "-z", prompt)
 		out, err := cmd.CombinedOutput()
 		if err != nil {
 			continue
@@ -663,7 +678,7 @@ OUTPUT FORMAT: Kubernetes, AWS, Terraform, Python, CI/CD (comma-separated ONLY, 
 JOB LISTINGS:
 %s`, strings.Join(jobList, "\n---\n"))
 
-		cmd := exec.Command("hermes", "-z", prompt)
+		cmd := exec.Command(scraper.HermesBin(), "-z", prompt)
 		out, err := cmd.CombinedOutput()
 		if err != nil {
 			s.log(fmt.Sprintf("Hermes batch %d failed: %v", i/batchSize, err))
@@ -719,7 +734,7 @@ JOB: %s at %s
 
 DESCRIPTION: %s`, title, company, description[:3000])
 
-	cmd := exec.Command("hermes", "-z", prompt)
+	cmd := exec.Command(scraper.HermesBin(), "-z", prompt)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return &JobAnalysis{Error: fmt.Sprintf("Hermes failed: %v", err)}, nil

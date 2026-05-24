@@ -33,9 +33,30 @@ func jobID(title, company, jURL string) string {
 	return fmt.Sprintf("%x", h.Sum(nil))[:16]
 }
 
+func HermesBin() string {
+	if p, err := exec.LookPath("hermes"); err == nil {
+		return p
+	}
+	return "hermes"
+}
+
+func PythonBin() string {
+	if p, err := exec.LookPath("python3"); err == nil {
+		return p
+	}
+	return "python3"
+}
+
+func safeTextSlice(s string, n int) string {
+	if len(s) <= n {
+		return s
+	}
+	return s[:n]
+}
+
 func ReadPDFText(pdfPath string) (string, error) {
 	script := fmt.Sprintf(`import pymupdf; doc=pymupdf.open(%q); print(" ".join(p.get_text() for p in doc))`, pdfPath)
-	cmd := exec.Command("python3", "-c", script)
+	cmd := exec.Command(PythonBin(), "-c", script)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return "", fmt.Errorf("pdf read failed: %v — %s", err, string(out))
@@ -53,9 +74,9 @@ func ExtractKeywordsFromPDF(pdfPath string) ([]string, string, error) {
 		`You are a job matching engine. Read this resume and output ONLY a comma-separated list of 40-60 keywords and key phrases that best represent this candidate's skills, technologies, roles, and industry expertise. Include: job titles, technologies, tools, platforms, methodologies, certifications, and domain-specific terms. Be specific (e.g. "Kubernetes" not "containers", "Director of Engineering" not "management"). Output only the comma list, nothing else.
 
 RESUME:
-%s`, fullText[:6000])
+%s`, safeTextSlice(fullText, 6000))
 
-	cmd := exec.Command("hermes", "-z", prompt)
+	cmd := exec.Command(HermesBin(), "-z", prompt)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return nil, "", fmt.Errorf("Hermes extraction failed: %v — output: %s", err, string(out))
@@ -65,7 +86,7 @@ RESUME:
 	keywords := ParseKeywordResponse(response)
 
 	if len(keywords) < 10 {
-		return nil, "", fmt.Errorf("Hermes returned too few keywords (%d). Response: %s", len(keywords), response[:200])
+		return nil, "", fmt.Errorf("Hermes returned too few keywords (%d). Response: %s", len(keywords), safeTextSlice(response, 200))
 	}
 
 	return keywords, fullText, nil
@@ -257,7 +278,7 @@ RESUME KEYWORDS: %s
 JOB SAMPLES:
 %s`, strings.Join(keywords, ", "), sampleText)
 
-	cmd := exec.Command("hermes", "-z", prompt)
+	cmd := exec.Command(HermesBin(), "-z", prompt)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return "", fmt.Errorf("Hermes failed: %v", err)

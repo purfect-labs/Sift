@@ -7,6 +7,7 @@
   let saved = false;
   let extracting = false;
   let extractResult = '';
+  let extractLogs = [];
 
   onMount(() => {
     JobService.GetConfig()
@@ -24,9 +25,11 @@
   function extractKeywords() {
     extracting = true;
     extractResult = '';
+    extractLogs = [];
     JobService.ExtractResume(config.resume_path)
       .then(result => {
-        extractResult = result ? `${result.jobs_found} keywords extracted via Hermes AI` : 'Done';
+        extractLogs = result?.errors || [];
+        extractResult = result?.jobs_found ? `${result.jobs_found} keywords extracted via Hermes AI` : 'Done';
         return JobService.GetConfig();
       })
       .then(c => { if (c) config = c; extracting = false; })
@@ -75,6 +78,14 @@
       </button>
     </div>
     {#if extractResult}<p class="extract-msg">{extractResult}</p>{/if}
+    {#if extractLogs.length > 0}
+      <div class="console-log">
+        <div class="console-title">Hermes Console</div>
+        {#each extractLogs as line}
+          <div class="console-line">{line}</div>
+        {/each}
+      </div>
+    {/if}
     {#if config.keywords?.length}
       <div class="keyword-cloud">
         {#each config.keywords.slice(0, 40) as kw}
@@ -139,4 +150,7 @@
   .info-box h3 { font-size: 14px; color: #999; margin-bottom: 12px; }
   .info-box ul { padding-left: 18px; font-size: 12px; color: #777; line-height: 1.8; }
   .info-box code { background: #1a1d30; padding: 1px 6px; border-radius: 3px; font-size: 11px; }
+  .console-log { margin-top: 12px; background: #0a0c14; border: 1px solid #1a1d30; border-radius: 6px; padding: 12px; max-height: 200px; overflow-y: auto; }
+  .console-title { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .console-line { font-size: 11px; color: #7eb87e; font-family: monospace; padding: 2px 0; border-bottom: 1px solid #0d0f18; }
 </style>

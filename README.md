@@ -22,13 +22,31 @@ Pre-built binaries for macOS, Linux, and Windows from [Releases](https://github.
 ## Quick Start
 
 ### Prerequisites
-- **Go 1.25+** — https://go.dev/dl/
-- **Node.js 22+** — https://nodejs.org/
-- **Python 3 + pymupdf** — `pip install pymupdf` (for PDF resume parsing)
-- **Hermes CLI** — https://github.com/nousresearch/hermes-agent (for AI analysis)
-- **SerpAPI key** — https://serpapi.com (free tier available)
 
-**One-liner:** `./dep-install.sh` installs everything except Hermes + SerpAPI key.
+| Dependency | Install | Purpose |
+|-----------|---------|---------|
+| Go 1.25+ | [go.dev/dl](https://go.dev/dl/) | Backend runtime |
+| Node.js 22+ | [nodejs.org](https://nodejs.org/) | Frontend build |
+| Python 3 + pymupdf | `pip install pymupdf` | Resume PDF parsing |
+| **Hermes CLI** | [Install guide](https://github.com/nousresearch/hermes-agent#installation) | AI keyword extraction, gap analysis, market analysis |
+| **SerpAPI key** | [serpapi.com](https://serpapi.com) (free tier: 100 searches/month) | Google Jobs scraping |
+
+**Hermes setup** (one-time):
+```bash
+pip install hermes-agent        # or: brew install hermes-agent
+hermes setup                    # configure your LLM provider + API key
+hermes model                    # set default model (e.g. deepseek-chat)
+```
+
+**SerpAPI setup** (one-time):
+1. Sign up at [serpapi.com](https://serpapi.com) — free tier gives 100 searches/month
+2. Copy your API key from the dashboard
+3. Paste it in JobDash Settings → SerpAPI Key, or add to `~/.jobdash/.env`:
+   ```
+   SERP_API_KEY=your_key_here
+   ```
+
+**One-liner:** `./dep-install.sh` installs Go, Node, Python, pymupdf, and Wails3 CLI.
 
 ```bash
 # Clone
