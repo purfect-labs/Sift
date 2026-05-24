@@ -4,11 +4,15 @@ on:
   push:
     tags: ['v*']
 
+permissions:
+  contents: write
+
 jobs:
   build:
-    name: Build ${{ matrix.os }} (${{ matrix.arch }})
+    name: jobdash ${{ matrix.os }}-${{ matrix.arch }}
     runs-on: ${{ matrix.runner }}
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: darwin
@@ -50,31 +54,74 @@ jobs:
           echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
           echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
-      - name: Build
+      - name: Build (macOS)
+        if: runner.os == 'macOS'
         run: |
-          GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build \
-            -tags production \
-            -ldflags="-s -w -X main.version=${{ steps.version.outputs.tag }}-${{ steps.version.outputs.sha }}" \
-            -o jobdash-${{ steps.version.outputs.tag }}-${{ matrix.os }}-${{ matrix.arch }}-${{ steps.version.outputs.sha }}${{ matrix.os == 'windows' && '.exe' || '' }} \
-            .
+          go build -tags production -trimpath -buildvcs=false \
+            -ldflags="-s -w -X main.version=${{ steps.version.outputs.tag }}" \
+            -o jobdash-${{ steps.version.outputs.tag }}-${{ matrix.os }}-${{ matrix.arch }} .
+        env:
+          GOOS: ${{ matrix.os }}
+          GOARCH: ${{ matrix.arch }}
+          CGO_ENABLED: '1'
+          CGO_CFLAGS: "-mmacosx-version-min=12.0"
+          CGO_LDFLAGS: "-mmacosx-version-min=12.0"
+          MACOSX_DEPLOYMENT_TARGET: "12.0"
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: jobdash-${{ matrix.os }}-${{ matrix.arch }}
-          path: jobdash-*
+      - name: Build (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          go build -tags production -trimpath -buildvcs=false \
+            -ldflags="-s -w -X main.version=${{ steps.version.outputs.tag }}" \
+            -o jobdash-${{ steps.version.outputs.tag }}-${{ matrix.os }}-${{ matrix.arch }} .
+        env:
+          GOOS: ${{ matrix.os }}
+          GOARCH: ${{ matrix.arch }}
+          CGO_ENABLED: '1'
 
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          path: artifacts
+      - name: Build (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          go build -tags production -trimpath -buildvcs=false \
+            -ldflags="-s -w -X main.version=${{ steps.version.outputs.tag }}" \
+            -o jobdash-${{ steps.version.outputs.tag }}-windows-amd64.exe .
+        env:
+          GOOS: windows
+          GOARCH: amd64
+          CGO_ENABLED: '0'
 
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: artifacts/**/*
-          generate_release_notes: true
+      - name: Package (macOS .zip)
+        if: runner.os == 'macOS'
+        run: |
+          BINARY=jobdash-${{ steps.version.outputs.tag }}-${{ matrix.os }}-${{ matrix.arch }}
+          mkdir -p "$BINARY.app/Contents/MacOS"
+          mkdir -p "$BINARY.app/Contents/Resources"
+          cp build/darwin/icons.icns "$BINARY.app/Contents/Resources/" 2>/dev/null || true
+          cp build/darwin/Info.plist "$BINARY.app/Contents/" 2>/dev/null || true
+          cp "$BINARY" "$BINARY.app/Contents/MacOS/jobdash"
+          codesign --force --deep --sign - "$BINARY.app"
+          zip -r "$BINARY.zip" "$BINARY.app"
+
+      - name: Package (Linux .tar.gz)
+        if: runner.os == 'Linux'
+        run: |
+          BINARY=jobdash-${{ steps.version.outputs.tag }}-${{ matrix.os }}-${{ matrix.arch }}
+          tar czf "$BINARY.tar.gz" "$BINARY"
+
+      - name: Package (Windows .zip)
+        if: runner.os == 'Windows'
+        run: |
+          $BINARY = "jobdash-${{ steps.version.outputs.tag }}-windows-amd64"
+          Compress-Archive -Path "$BINARY.exe" -DestinationPath "$BINARY.zip"
+
+      - name: Upload Release Asset
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          tag="${{ steps.version.outputs.tag }}"
+          for f in jobdash-$tag-*; do
+            [ -f "$f" ] || continue
+            echo "Uploading: $f"
+            gh release upload "$tag" "$f" --clobber
+          done
