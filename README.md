@@ -21,9 +21,13 @@ Built with [Wails v3](https://v3.wails.io/) (Go + Svelte).
 |-----------|----------|
 | ![Dashboard](screenshots/dashboard.png) | ![Settings](screenshots/settings.png) |
 
-| Insights | Scraper |
-|----------|---------|
-| ![Insights](screenshots/insights.png) | ![Scraper](screenshots/scraper.png) |
+| Jobs | Scraper |
+|------|---------|
+| ![Jobs](screenshots/jobs.png) | ![Scraper](screenshots/scraper.png) |
+
+| Insights |
+|----------|
+| ![Insights](screenshots/insights.png) |
 
 ## Download
 
