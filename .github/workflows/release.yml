@@ -5,15 +5,12 @@ on:
     tags: ['v*']
     branches: [main]
 
-concurrency:
-  group: release-${{ github.ref }}
-  cancel-in-progress: true
-
 permissions:
   contents: write
 
 jobs:
   build:
+    # Skip the auto-increment commit itself (the release job handles it)
     name: jobdash ${{ matrix.os }}-${{ matrix.arch }}
     runs-on: ${{ matrix.runner }}
     strategy:
@@ -55,11 +52,25 @@ jobs:
 
       - name: Get version info
         id: version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          tag="${GITHUB_REF#refs/tags/}"
           sha="$(git rev-parse --short HEAD)"
-          # Only set tag if this is actually a tag push
-          if [ "$tag" = "$GITHUB_REF" ]; then tag=""; fi
+          # On tag push — use the tag name
+          # On branch push — auto-increment last tag's patch version
+          ref="${GITHUB_REF#refs/tags/}"
+          if [ "$ref" != "$GITHUB_REF" ] && [ -n "$ref" ]; then
+            tag="$ref"
+          else
+            last_tag="$(git describe --tags --abbrev=0 2>/dev/null || echo 'v0')"
+            maj="$(echo "$last_tag" | sed 's/^v//' | cut -d. -f1)"
+            maj=$((maj + 1))
+            tag="v${maj}"
+            git config user.name "github-actions"
+            git config user.email "actions@github.com"
+            git tag "$tag"
+            git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" "$tag"
+          fi
           echo "tag=$tag" >> $GITHUB_OUTPUT
           echo "sha=$sha" >> $GITHUB_OUTPUT
 
@@ -129,15 +140,8 @@ jobs:
         run: |
           set -euo pipefail
           tag="${{ steps.version.outputs.tag }}"
-          # On tag push — upload to that tag's release
-          # On main push — upload to 'nightly' release
-          if [ -z "$tag" ] || [ "$tag" = "" ]; then
-            tag="nightly"
-            # Create or get nightly release
-            gh release create "$tag" --title "Nightly Build (${{ github.sha }})" --notes "Auto-built from main@${{ github.sha }}" 2>/dev/null || true
-          fi
-          for f in jobdash-nightly-* jobdash-$tag-*; do
+          for f in jobdash-$tag-*; do
             [ -f "$f" ] || continue
-            echo "Uploading: $f to $tag"
-            gh release upload "$tag" "$f" --clobber 2>/dev/null || true
+            echo "Uploading: $f"
+            gh release upload "$tag" "$f" --clobber
           done
