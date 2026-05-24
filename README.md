@@ -2,7 +2,7 @@
 
 AI-powered job search and application tracker. Scrape jobs, extract resume keywords with AI, match and filter listings, track your pipeline from discovery to offer — all in a native desktop app.
 
-Built with [Wails v3](https://v3.wails.io/) (Go + Svelte).
+Built with [Wails v3](https://v3.wails.io/) (Go + Svelte). Project intelligence managed by [Evo](https://github.com/purfect-labs/evo) — the engineering brain for AI-first teams.
 
 ## Features
 

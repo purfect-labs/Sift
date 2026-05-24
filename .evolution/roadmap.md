@@ -56,9 +56,9 @@ Dashboard with job pipeline view, JobCard component, status management, offer tr
 ### B.2-shawnM Scraper Panel + Settings `completed` <!-- UUID: b1c2d3e4-2222-4bbb-2222-222222222222 -->
 Created: 2026-05-22
 Started: 2026-05-22
-Completed: 2026-05-23
+Completed: 2026-05-24
 Assigned: @shawnM
-ScraperPanel with real-time log streaming, Settings with resume upload + config.
+ScraperPanel with real-time log streaming. Settings with API key paste input, resume upload, config.
 
 ### B.3-shawnM Insights + Analytics `completed` <!-- UUID: b1c2d3e4-3333-4bbb-3333-333333333333 -->
 Created: 2026-05-23
@@ -67,11 +67,46 @@ Completed: 2026-05-23
 Assigned: @shawnM
 Keyword stats, market analysis view, position manager with Hermes recommendations.
 
-## Phase C — Polish & Evo
+## Phase C — Open Source & Polish
 
 ### C.1-shawnM Evo Integration `completed` <!-- UUID: c1d2e3f4-1111-4ccc-1111-111111111111 -->
 Created: 2026-05-24
 Started: 2026-05-24
 Completed: 2026-05-24
 Assigned: @shawnM
-.evolution/ bootstrapped and populated. Workspace config in plabs org.
+.evolution/ bootstrapped and populated. Workspace config in purfect-labs org.
+
+### C.2-shawnM Open Source Prep `completed` <!-- UUID: c1d2e3f4-2222-4ccc-2222-222222222222 -->
+Created: 2026-05-24
+Started: 2026-05-24
+Completed: 2026-05-24
+Assigned: @shawnM
+MIT license, CONTRIBUTING.md, .gitignore, README with full docs. Personal data wiped. Repo pushed to GitHub.
+
+### C.3-shawnM API Key via UI `completed` <!-- UUID: c1d2e3f4-3333-4ccc-3333-333333333333 -->
+Created: 2026-05-24
+Started: 2026-05-24
+Completed: 2026-05-24
+Assigned: @shawnM
+SerpAPI key paste input in Settings. SetConfig writes to ~/.jobdash/.env. Password-masked input.
+
+### C.4-shawnM Hermes + Python Path Fix `completed` <!-- UUID: c1d2e3f4-4444-4ccc-4444-444444444444 -->
+Created: 2026-05-24
+Started: 2026-05-24
+Completed: 2026-05-24
+Assigned: @shawnM
+exec.LookPath for hermes/python3 to fix macOS GUI sandbox PATH. Safe slice bounds to prevent panics. Console log output in Settings during extraction.
+
+### C.5-shawnM CI/CD Releases `completed` <!-- UUID: c1d2e3f4-5555-4ccc-5555-555555555555 -->
+Created: 2026-05-24
+Started: 2026-05-24
+Completed: 2026-05-24
+Assigned: @shawnM
+GitHub Actions multi-arch: macOS (arm64/amd64), Linux (arm64/amd64), Windows (amd64). Version tag + short SHA in binary name. v1 tagged and released.
+
+### C.6-shawnM Docs & Screenshots `completed` <!-- UUID: c1d2e3f4-6666-4ccc-6666-666666666666 -->
+Created: 2026-05-24
+Started: 2026-05-24
+Completed: 2026-05-24
+Assigned: @shawnM
+dep-install.sh for macOS/Linux. README with prerequisite table, Hermes + SerpAPI setup guides, 5 screenshots. Build-from-source instructions.
