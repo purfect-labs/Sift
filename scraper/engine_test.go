@@ -58,6 +58,26 @@ func TestParseKeywordResponse(t *testing.T) {
 			input:    "Kubernetes",
 			minCount: 1,
 		},
+		{
+			name:     "empty response",
+			input:    "",
+			minCount: 0,
+		},
+		{
+			name:     "deduped note prefix",
+			input:    "Deduped and sorted alphabetically:\nKubernetes, Docker, Python",
+			minCount: 3,
+		},
+		{
+			name:     "note prefix",
+			input:    "Note: here are keywords\nKubernetes, Docker, Python",
+			minCount: 3,
+		},
+		{
+			name:     "let me prefix",
+			input:    "Let me extract those:\nKubernetes, Docker, Python",
+			minCount: 3,
+		},
 	}
 
 	for _, tt := range tests {
@@ -79,6 +99,16 @@ func TestParseKeywordResponse_Dedup(t *testing.T) {
 	results := ParseKeywordResponse("Go, go, GO, Docker, docker")
 	if len(results) > 3 {
 		t.Errorf("expected dedup to remove case duplicates, got %d: %v", len(results), results)
+	}
+}
+
+func TestParseKeywordResponse_AllCommentary(t *testing.T) {
+	// "Sure thing" survives because the backwards loop skips lines starting with
+	// "Sure" but the fallback takes the last clean line anyway. Real Hermes output
+	// would never be purely commentary — this tests the safety fallback.
+	results := ParseKeywordResponse("Here are the keywords\nI'll list them\nSure thing")
+	if len(results) == 0 {
+		t.Error("fallback should return last line even if it looks like commentary")
 	}
 }
 
@@ -125,6 +155,22 @@ func TestComputeMatchScore(t *testing.T) {
 			minScore:    0,
 			maxScore:    0,
 		},
+		{
+			name:        "single token match",
+			title:       "DevOps Engineer",
+			company:     "Cloud Co",
+			description: "Experience with cloud platforms and containers",
+			minScore:    0,
+			maxScore:    15,
+		},
+		{
+			name:        "substring match",
+			title:       "Go Developer",
+			company:     "Startup",
+			description: "Building microservices",
+			minScore:    15,
+			maxScore:    25,
+		},
 	}
 
 	for _, tt := range tests {
@@ -151,5 +197,35 @@ func TestComputeMatchScore_MultiWord(t *testing.T) {
 	)
 	if score < 50 {
 		t.Errorf("multi-word keyword should match well, got %f", score)
+	}
+}
+
+func TestComputeMatchScore_ExactVsPartial(t *testing.T) {
+	keywords := []string{"Kubernetes"}
+
+	exact := computeMatchScore("Kubernetes Engineer", "", "Must know Kubernetes deeply", keywords)
+	partial := computeMatchScore("Container Engineer", "", "Orchestration experience", keywords)
+	if exact <= partial {
+		t.Errorf("exact match score (%f) should be higher than partial (%f)", exact, partial)
+	}
+}
+
+func TestScrapeResult_Defaults(t *testing.T) {
+	r := &ScrapeResult{}
+	if r.JobsFound != 0 {
+		t.Error("new ScrapeResult should have 0 JobsFound")
+	}
+	if len(r.Errors) != 0 {
+		t.Error("new ScrapeResult should have no errors")
+	}
+}
+
+func TestKeywordCount_Defaults(t *testing.T) {
+	kc := &KeywordCount{}
+	if kc.Keyword != "" {
+		t.Error("Keyword should default to empty")
+	}
+	if kc.Count != 0 {
+		t.Error("Count should default to 0")
 	}
 }

@@ -278,3 +278,178 @@ func TestUpdateOfferDetails(t *testing.T) {
 		t.Errorf("wrong equity: %s", jobs[0].OfferEquity)
 	}
 }
+
+func TestInsertJob_Defaults(t *testing.T) {
+	setupTestDB(t)
+
+	job := &Job{ID: "j1", Title: "Test", Company: "Co", URL: "http://co.com"}
+	if err := InsertJob(job); err != nil {
+		t.Fatalf("InsertJob failed: %v", err)
+	}
+	if job.Status != "new" {
+		t.Errorf("default status should be 'new', got '%s'", job.Status)
+	}
+	if job.CreatedAt == "" {
+		t.Error("CreatedAt should be auto-set")
+	}
+	if job.UpdatedAt == "" {
+		t.Error("UpdatedAt should be auto-set")
+	}
+	if job.ScrapedAt == "" {
+		t.Error("ScrapedAt should be auto-set")
+	}
+}
+
+func TestUpdateJobStatus_DateTracking(t *testing.T) {
+	setupTestDB(t)
+
+	InsertJob(&Job{ID: "j1", Title: "Test", Company: "Co", URL: "http://co.com"})
+
+	// applied → should set applied_date
+	UpdateJobStatus("j1", "applied")
+	jobs, _ := GetAllJobs("all")
+	if jobs[0].AppliedDate == "" {
+		t.Error("applied_date should be set when status goes to applied")
+	}
+
+	// interviewing → should set interview_date
+	UpdateJobStatus("j1", "interviewing")
+	jobs, _ = GetAllJobs("all")
+	if jobs[0].InterviewDate == "" {
+		t.Error("interview_date should be set when status goes to interviewing")
+	}
+
+	// offer → should set offer_date
+	UpdateJobStatus("j1", "offer")
+	jobs, _ = GetAllJobs("all")
+	if jobs[0].OfferDate == "" {
+		t.Error("offer_date should be set when status goes to offer")
+	}
+}
+
+func TestUpdateJobSkills(t *testing.T) {
+	setupTestDB(t)
+
+	InsertJob(&Job{ID: "j1", Title: "Test", Company: "Co", URL: "http://co.com", Skills: "old"})
+	UpdateJobSkills("j1", "Go, Python, Rust")
+	jobs, _ := GetAllJobs("all")
+	if jobs[0].Skills != "Go, Python, Rust" {
+		t.Errorf("skills not updated: %s", jobs[0].Skills)
+	}
+}
+
+func TestUpdateMatchScore(t *testing.T) {
+	setupTestDB(t)
+
+	InsertJob(&Job{ID: "j1", Title: "Test", Company: "Co", URL: "http://co.com", MatchScore: 50})
+	UpdateMatchScore("j1", 95.5)
+	jobs, _ := GetAllJobs("all")
+	if jobs[0].MatchScore != 95.5 {
+		t.Errorf("match_score not updated: %f", jobs[0].MatchScore)
+	}
+}
+
+func TestUpdateGapAnalysis(t *testing.T) {
+	setupTestDB(t)
+
+	InsertJob(&Job{ID: "j1", Title: "Test", Company: "Co", URL: "http://co.com"})
+	UpdateGapAnalysis("j1", "Missing: Kubernetes, Terraform")
+	jobs, _ := GetAllJobs("all")
+	if jobs[0].GapAnalysis != "Missing: Kubernetes, Terraform" {
+		t.Errorf("gap_analysis not updated: %s", jobs[0].GapAnalysis)
+	}
+}
+
+func TestGetAllJobs_Empty(t *testing.T) {
+	setupTestDB(t)
+
+	jobs, err := GetAllJobs("new")
+	if err != nil {
+		t.Fatalf("GetAllJobs on empty DB failed: %v", err)
+	}
+	if len(jobs) != 0 {
+		t.Errorf("expected 0 jobs, got %d", len(jobs))
+	}
+}
+
+func TestGetJobCounts_Empty(t *testing.T) {
+	setupTestDB(t)
+
+	counts, err := GetJobCounts()
+	if err != nil {
+		t.Fatalf("GetJobCounts on empty DB failed: %v", err)
+	}
+	for status, count := range counts {
+		if count != 0 {
+			t.Errorf("expected 0 for status %s, got %d", status, count)
+		}
+	}
+}
+
+func TestLoadKeywords_Empty(t *testing.T) {
+	setupTestDB(t)
+
+	kws, err := LoadKeywords("nonexistent.pdf")
+	if err != nil {
+		t.Fatalf("LoadKeywords on empty DB failed: %v", err)
+	}
+	if len(kws) != 0 {
+		t.Errorf("expected 0 keywords, got %d", len(kws))
+	}
+}
+
+func TestLoadPositions_Empty(t *testing.T) {
+	setupTestDB(t)
+
+	positions, err := LoadPositions()
+	if err != nil {
+		t.Fatalf("LoadPositions on empty DB failed: %v", err)
+	}
+	if len(positions) != 0 {
+		t.Errorf("expected 0 positions, got %d", len(positions))
+	}
+}
+
+func TestUpdateJobStatus_Nonexistent(t *testing.T) {
+	setupTestDB(t)
+
+	// Should not error on nonexistent job (just no-op)
+	err := UpdateJobStatus("nonexistent", "applied")
+	if err != nil {
+		t.Errorf("UpdateJobStatus on nonexistent job should not error: %v", err)
+	}
+}
+
+func TestDeleteJob_Nonexistent(t *testing.T) {
+	setupTestDB(t)
+
+	// Should not error on nonexistent job
+	err := DeleteJob("nonexistent")
+	if err != nil {
+		t.Errorf("DeleteJob on nonexistent job should not error: %v", err)
+	}
+}
+
+func TestClearAllJobs_Empty(t *testing.T) {
+	setupTestDB(t)
+
+	n, err := ClearAllJobs()
+	if err != nil {
+		t.Fatalf("ClearAllJobs on empty DB failed: %v", err)
+	}
+	if n != 0 {
+		t.Errorf("expected 0 cleared, got %d", n)
+	}
+}
+
+func TestAddPosition_Duplicate(t *testing.T) {
+	setupTestDB(t)
+
+	AddPosition("SRE")
+	AddPosition("SRE") // should be ignored (INSERT OR IGNORE)
+
+	positions, _ := LoadPositions()
+	if len(positions) != 1 {
+		t.Errorf("duplicate position should be ignored, got %d", len(positions))
+	}
+}
