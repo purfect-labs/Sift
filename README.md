@@ -1,5 +1,10 @@
 # JobDash
 
+[![Go Version](https://img.shields.io/badge/Go-1.25+-00ADD8?logo=go)](https://go.dev/dl/)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Release](https://img.shields.io/badge/release-v1-blue)](https://github.com/purfect-labs/jobdash/releases)
+[![Built with Evo](https://img.shields.io/badge/built%20with-Evo-FFD600)](https://github.com/purfect-labs/evo)
+
 AI-powered job search and application tracker. Scrape jobs, extract resume keywords with AI, match and filter listings, track your pipeline from discovery to offer — all in a native desktop app.
 
 Built with [Wails v3](https://v3.wails.io/) (Go + Svelte). Project intelligence managed by [Evo](https://github.com/purfect-labs/evo) — the engineering brain for AI-first teams.

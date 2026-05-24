@@ -50,6 +50,9 @@ func loadEnv(path string) map[string]string {
 }
 
 func safeSlice(s string, n int) string {
+	if n <= 0 {
+		return ""
+	}
 	if len(s) <= n {
 		return s
 	}
