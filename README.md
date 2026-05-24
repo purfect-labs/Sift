@@ -15,6 +15,16 @@ Built with [Wails v3](https://v3.wails.io/) (Go + Svelte).
 - **Pipeline Tracking** — Full pipeline: New → Saved → Applied → Interviewing → Offer.
 - **100% Local** — SQLite database, no cloud accounts, no data leaves your machine.
 
+## Screenshots
+
+| Dashboard | Settings |
+|-----------|----------|
+| ![Dashboard](screenshots/dashboard.png) | ![Settings](screenshots/settings.png) |
+
+| Insights | Scraper |
+|----------|---------|
+| ![Insights](screenshots/insights.png) | ![Scraper](screenshots/scraper.png) |
+
 ## Download
 
 Pre-built binaries for macOS, Linux, and Windows from [Releases](https://github.com/purfect-labs/jobdash/releases).
