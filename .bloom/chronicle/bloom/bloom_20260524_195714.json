@@ -1,0 +1,13 @@
+{
+  "commit_author": "bloom-agent",
+  "context": {
+    "branch": "feat/analytics-opt-in",
+    "pr_url": "https://github.com/purfect-labs/jobdash/pull/new/feat/analytics-opt-in",
+    "remote": "github.com:purfect-labs/jobdash.git",
+    "status": "pushed",
+    "title": "jobdash-analytics-pushed"
+  },
+  "event_type": "bloom",
+  "geological_metaphor": "Sediment deposition - evolutionary evidence",
+  "timestamp": "2026-05-25T00:57:14Z"
+}
