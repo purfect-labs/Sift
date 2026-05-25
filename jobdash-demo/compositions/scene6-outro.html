@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #0a0c14; font-family: "Inter", sans-serif; }
+      .scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+      .logo-icon { font-size: 96px; }
+      .logo-text { font-size: 72px; font-weight: 800; color: #e8e8f0; letter-spacing: -0.03em; margin-top: 16px; }
+      .logo-accent { color: #8b9dff; }
+      .tagline { font-size: 26px; color: #666; margin-top: 12px; font-weight: 400; }
+      .cta-url { font-size: 30px; color: #8b9dff; font-family: monospace; margin-top: 40px; font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <div class="scene" data-composition-id="scene6-outro" data-width="1920" data-height="1080">
+      <div class="logo-icon" id="icon" style="opacity: 0;">⚡</div>
+      <div class="logo-text" id="logo" style="opacity: 0;">Job<span class="logo-accent">Dash</span></div>
+      <div class="tagline" id="tagline" style="opacity: 0;">AI-Powered Job Search &amp; Application Tracker</div>
+      <div class="cta-url" id="cta" style="opacity: 0;">github.com/purfect-labs/jobdash</div>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#icon", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.4)" }, 0.2);
+      tl.fromTo("#logo", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 0.8);
+      tl.to("#tagline", { opacity: 1, duration: 0.5, ease: "power2.out" }, 1.5);
+      tl.fromTo("#cta", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 2.2);
+      window.__timelines["scene6-outro"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #0a0c14; font-family: "Inter", sans-serif; }
+      .scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+      .bg-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; }
+      .overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(10,12,20,0.95)); padding: 200px 100px 60px; }
+      .title { font-size: 52px; font-weight: 700; color: #e8e8f0; letter-spacing: -0.02em; margin-bottom: 12px; }
+      .subtitle { font-size: 22px; color: #8b9dff; font-weight: 500; }
+      .steps { display: flex; gap: 24px; margin-top: 24px; }
+      .step { font-size: 15px; color: #888; display: flex; align-items: center; gap: 8px; }
+      .step-arrow { color: #555; }
+    </style>
+  </head>
+  <body>
+    <div class="scene" data-composition-id="scene3-scraper" data-width="1920" data-height="1080">
+      <img class="bg-image" id="bg" src="../assets/scraper.png" />
+      <div class="overlay">
+        <div class="title" id="title" style="opacity: 0;">Resume → Keywords → Match Scores</div>
+        <div class="subtitle" id="subtitle" style="opacity: 0;">Hermes AI reads your resume. Google Jobs finds matches. Scored and ranked.</div>
+        <div class="steps">
+          <span class="step" id="s1" style="opacity: 0;">📄 Resume PDF</span>
+          <span class="step-arrow">→</span>
+          <span class="step" id="s2" style="opacity: 0;">🔑 Keywords</span>
+          <span class="step-arrow">→</span>
+          <span class="step" id="s3" style="opacity: 0;">🔍 Google Jobs</span>
+          <span class="step-arrow">→</span>
+          <span class="step" id="s4" style="opacity: 0;">📊 Match Scores</span>
+        </div>
+      </div>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.to("#bg", { opacity: 1, duration: 0.5, ease: "power2.out" }, 0);
+      tl.fromTo("#title", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.5);
+      tl.fromTo("#subtitle", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 1.2);
+      tl.to("#s1", { opacity: 1, duration: 0.3 }, 2.0);
+      tl.to("#s2", { opacity: 1, duration: 0.3 }, 2.4);
+      tl.to("#s3", { opacity: 1, duration: 0.3 }, 2.8);
+      tl.to("#s4", { opacity: 1, duration: 0.3 }, 3.2);
+      tl.to("#title", { opacity: 0, duration: 0.3 }, 5.4);
+      tl.to("#subtitle", { opacity: 0, duration: 0.3 }, 5.4);
+      tl.to("#bg", { opacity: 0, duration: 0.4 }, 5.6);
+      window.__timelines["scene3-scraper"] = tl;
+    </script>
+  </body>
+</html>
