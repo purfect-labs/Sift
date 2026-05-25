@@ -1,0 +1,130 @@
+# Close Screen Templates — PurfectLabs Product Demo Videos
+
+Two variants depending on screen time budget.
+
+---
+
+## Variant A: Cards-Only (Short videos, 25-35s total)
+
+Best for: tight timing where every second counts. Just brand + app portfolio.
+
+```html
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: #0a0c14; font-family: "Inter", sans-serif; }
+  .scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+  .dev-label { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: #6b6b8a; }
+  .brand-name { font-size: 28px; color: #e0e0e0; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; margin-bottom: 6px; }
+  .app-grid { display: flex; gap: 8px; perspective: 1000px; }
+  .app-card { background: rgba(13,15,26,0.6); border: 1px solid #1a1d2e; border-top: 2px solid; border-radius: 3px; padding: 6px 8px; width: 80px; display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; }
+  .app-icon { font-size: 16px; line-height: 1.2; }
+  .app-name { font-family: system-ui; font-size: 9px; letter-spacing: 0.04em; text-transform: uppercase; color: #c0c0c0; }
+</style>
+<div class="scene" data-composition-id="scene6-outro" data-width="1920" data-height="1080">
+  <span class="dev-label" id="c-dev">DEVELOPED BY</span>
+  <span class="brand-name" id="c-brand">PurfectLabs</span>
+  <div class="app-grid" id="c-apps">
+    <div class="app-card" id="ca-1" style="border-top-color:#4a9eff;"><span class="app-icon">♪</span><span class="app-name">Undertow</span></div>
+    <div class="app-card" id="ca-2" style="border-top-color:#7c8aff;"><span class="app-icon">⚡</span><span class="app-name">Sift</span></div>
+    <div class="app-card" id="ca-3" style="border-top-color:#FFD600;"><span class="app-icon">🧠</span><span class="app-name">Evo</span></div>
+    <div class="app-card" id="ca-4" style="border-top-color:#ff69b4;"><span class="app-icon">🌸</span><span class="app-name">Bloom</span></div>
+    <div class="app-card" id="ca-5" style="border-top-color:#b0585a;"><span class="app-icon">💧</span><span class="app-name">Thirst</span></div>
+    <div class="app-card" id="ca-6" style="border-top-color:#6c47ff;"><span class="app-icon">🔄</span><span class="app-name">Orgnsnc</span></div>
+  </div>
+</div>
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  tl.from("#c-dev", { opacity: 0, y: 10, duration: 0.4, ease: "power2.out" }, 0.2);
+  tl.from("#c-brand", { opacity: 0, y: 10, scale: 0.95, duration: 0.5, ease: "back.out(1.3)" }, 0.6);
+  tl.from("#ca-1", { opacity: 0, y: 15, scale: 0.85, rotationY: -15, duration: 0.4, ease: "back.out(1.4)" }, 1.3);
+  tl.from("#ca-2", { opacity: 0, y: 15, scale: 0.85, rotationY: 12, duration: 0.4, ease: "back.out(1.4)" }, 1.6);
+  tl.from("#ca-3", { opacity: 0, y: 15, scale: 0.85, rotationY: -10, duration: 0.4, ease: "back.out(1.4)" }, 1.9);
+  tl.from("#ca-4", { opacity: 0, y: 15, scale: 0.85, rotationY: 8, duration: 0.4, ease: "back.out(1.4)" }, 2.2);
+  tl.from("#ca-5", { opacity: 0, y: 15, scale: 0.85, rotationY: -6, duration: 0.4, ease: "back.out(1.4)" }, 2.5);
+  tl.from("#ca-6", { opacity: 0, y: 15, scale: 0.85, rotationY: 5, duration: 0.4, ease: "back.out(1.4)" }, 2.8);
+  window.__timelines["scene6-outro"] = tl;
+</script>
+```
+
+**GSAP timing:** Brand fades in (0.2-1.1s) → cards stagger (1.3-4.1s, 0.3s gap). Hold until end.
+
+---
+
+## Variant B: Screenshot + Cards (Slightly longer videos, 35-50s total)
+
+Best for: when the user asks for "home page and github on signature close" or when the app has a visually distinctive dashboard screenshot worth showing one last time.
+
+```html
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: #0a0c14; font-family: "Inter", sans-serif; }
+  .scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .screenshot-wrap { width: 70%; max-height: 600px; overflow: hidden; border-radius: 8px; border: 1px solid #1a1d2e; opacity: 0; }
+  .screenshot-wrap img { width: 100%; height: 100%; object-fit: contain; object-position: top; }
+  .bottom-section { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 28px; }
+  .github-row { display: flex; align-items: center; gap: 10px; opacity: 0; }
+  .github-row svg { width: 28px; height: 28px; fill: #8b9dff; }
+  .github-url { font-size: 22px; color: #8b9dff; font-family: monospace; font-weight: 600; letter-spacing: -0.01em; }
+  .dev-label { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: #6b6b8a; margin-bottom: 4px; }
+  .app-grid { display: flex; gap: 8px; perspective: 1000px; margin-top: 10px; }
+  .app-card { background: rgba(13,15,26,0.6); border: 1px solid #1a1d2e; border-top: 2px solid; border-radius: 3px; padding: 6px 8px; width: 80px; display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; }
+  .app-icon { font-size: 16px; line-height: 1.2; }
+  .app-name { font-family: system-ui; font-size: 9px; letter-spacing: 0.04em; text-transform: uppercase; color: #c0c0c0; }
+</style>
+<div class="scene" data-composition-id="scene6-outro" data-width="1920" data-height="1080">
+  <div class="screenshot-wrap" id="ss-wrap">
+    <img src="../assets/dashboard.png" />
+  </div>
+  <div class="bottom-section">
+    <div class="github-row" id="gh-row">
+      <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      <span class="github-url">github.com/purfect-labs/sift</span>
+    </div>
+    <span class="dev-label" id="c-dev">DEVELOPED BY PurfectLabs</span>
+    <div class="app-grid" id="c-apps">
+      <div class="app-card" id="ca-1" style="border-top-color:#4a9eff;"><span class="app-icon">♪</span><span class="app-name">Undertow</span></div>
+      <div class="app-card" id="ca-2" style="border-top-color:#7c8aff;"><span class="app-icon">⚡</span><span class="app-name">Sift</span></div>
+      <div class="app-card" id="ca-3" style="border-top-color:#FFD600;"><span class="app-icon">🧠</span><span class="app-name">Evo</span></div>
+      <div class="app-card" id="ca-4" style="border-top-color:#ff69b4;"><span class="app-icon">🌸</span><span class="app-name">Bloom</span></div>
+      <div class="app-card" id="ca-5" style="border-top-color:#b0585a;"><span class="app-icon">💧</span><span class="app-name">Thirst</span></div>
+      <div class="app-card" id="ca-6" style="border-top-color:#6c47ff;"><span class="app-icon">🔄</span><span class="app-name">Orgnsnc</span></div>
+    </div>
+  </div>
+</div>
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  // SS appears first with gentle zoom
+  tl.to("#ss-wrap", { opacity: 1, duration: 0.5, ease: "power2.out" }, 0.2);
+  tl.to("#ss-wrap img", { scale: 1.03, duration: 3, ease: "none" }, 0.2);
+  // SS fades out as close content fades in — CRITICAL: dissolve, not static coexist
+  tl.to("#gh-row", { opacity: 1, duration: 0.5, ease: "power2.out" }, 2.0);
+  tl.to("#ss-wrap", { opacity: 0, duration: 0.6, ease: "power2.inOut" }, 2.0);
+  tl.from("#c-dev", { opacity: 0, y: 8, duration: 0.4, ease: "power2.out" }, 2.8);
+  tl.from("#ca-1", { opacity: 0, y: 10, scale: 0.85, rotationY: -15, duration: 0.35, ease: "back.out(1.4)" }, 3.2);
+  tl.from("#ca-2", { opacity: 0, y: 10, scale: 0.85, rotationY: 12, duration: 0.35, ease: "back.out(1.4)" }, 3.45);
+  tl.from("#ca-3", { opacity: 0, y: 10, scale: 0.85, rotationY: -10, duration: 0.35, ease: "back.out(1.4)" }, 3.7);
+  tl.from("#ca-4", { opacity: 0, y: 10, scale: 0.85, rotationY: 8, duration: 0.35, ease: "back.out(1.4)" }, 3.95);
+  tl.from("#ca-5", { opacity: 0, y: 10, scale: 0.85, rotationY: -6, duration: 0.35, ease: "back.out(1.4)" }, 4.2);
+  tl.from("#ca-6", { opacity: 0, y: 10, scale: 0.85, rotationY: 5, duration: 0.35, ease: "back.out(1.4)" }, 4.45);
+  window.__timelines["scene6-outro"] = tl;
+</script>
+```
+
+**GSAP timing:** SS fades in (0.2s) → SS starts gentle zoom (3s slow scale) → at 2.0s, SS fades out as GitHub row fades in → DEVELOPED BY at 2.8s → cards stagger (3.2-4.45s, 0.25s gap). Last ~3s is brand content only on dark bg.
+
+**IMPORTANT:** The `src="../assets/dashboard.png"` path assumes the screenshot is at `assets/dashboard.png` relative to the `compositions/` directory. Update the path to match your actual screenshot filename.
+
+## App Card Colors
+
+| App | Border Color | Icon |
+|-----|-------------|------|
+| Undertow | `#4a9eff` | ♪ |
+| Sift | `#7c8aff` | ⚡ |
+| Evo | `#FFD600` | 🧠 |
+| Bloom | `#ff69b4` | 🌸 |
+| Thirst | `#b0585a` | 💧 |
+| Organisync | `#6c47ff` | 🔄 |
+
+Always verify app colors against the `purfectlabs/purfectlabs-apps` skill — these may drift as brands evolve.
