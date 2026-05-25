@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Sift — AI-Powered Job Search Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=block" rel="stylesheet" />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0; width: 1920px; height: 1080px; overflow: hidden;
+        background: #0a0c14; font-family: "Inter", sans-serif;
+      }
+      .scene {
+        position: absolute; top: 0; left: 0;
+        width: 100%; height: 100%;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+      }
+      .scene-content {
+        width: 100%; height: 100%;
+        padding: 80px 100px;
+        display: flex; flex-direction: column;
+        box-sizing: border-box;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"
+      data-composition-id="main"
+      data-start="0" data-duration="40"
+      data-width="1920" data-height="1080">
+
+      <!-- Scene 1: Hook — dark screen, text reveal -->
+      <div id="scene-1" class="scene"
+        data-composition-id="scene1-hook"
+        data-composition-src="compositions/scene1-hook.html"
+        data-start="0" data-duration="4"
+        data-track-index="1" data-width="1920" data-height="1080">
+      </div>
+
+      <!-- Scene 2: Dashboard — what it is -->
+      <div id="scene-2" class="scene"
+        data-composition-id="scene2-dashboard"
+        data-composition-src="compositions/scene2-dashboard.html"
+        data-start="4" data-duration="7"
+        data-track-index="1" data-width="1920" data-height="1080">
+      </div>
+
+      <!-- Scene 3: Scraper — how it works -->
+      <div id="scene-3" class="scene"
+        data-composition-id="scene3-scraper"
+        data-composition-src="compositions/scene3-scraper.html"
+        data-start="11" data-duration="8"
+        data-track-index="1" data-width="1920" data-height="1080">
+      </div>
+
+      <!-- Scene 4: Pipeline — tracking -->
+      <div id="scene-4" class="scene"
+        data-composition-id="scene4-pipeline"
+        data-composition-src="compositions/scene4-pipeline.html"
+        data-start="19" data-duration="7"
+        data-track-index="1" data-width="1920" data-height="1080">
+      </div>
+
+      <!-- Scene 5: Privacy + CTA -->
+      <div id="scene-5" class="scene"
+        data-composition-id="scene5-privacy"
+        data-composition-src="compositions/scene5-privacy.html"
+        data-start="26" data-duration="7"
+        data-track-index="1" data-width="1920" data-height="1080">
+      </div>
+
+      <!-- Scene 6: Outro -->
+      <div id="scene-6" class="scene"
+        data-composition-id="scene6-outro"
+        data-composition-src="compositions/scene6-outro.html"
+        data-start="33" data-duration="7"
+        data-track-index="1" data-width="1920" data-height="1080">
+      </div>
+
+      <!-- Audio -->
+      <audio id="narration"
+        data-composition-id="audio-narration"
+        src="narration.wav"
+        data-start="0" data-duration="40"
+        data-track-index="0">
+      </audio>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const mainTl = gsap.timeline({ paused: true });
+      window.__timelines["main"] = mainTl;
+    </script>
+  </body>
+</html>
