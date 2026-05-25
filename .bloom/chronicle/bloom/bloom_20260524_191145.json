@@ -1,0 +1,28 @@
+{
+  "commit_author": "bloom-agent",
+  "context": {
+    "description": "PostHog analytics opt-in feature for JobDash desktop app",
+    "events": [
+      "session_started",
+      "session_ended",
+      "scrape_started",
+      "scrape_completed",
+      "job_saved",
+      "pipeline_changed",
+      "insights_viewed",
+      "settings_opened"
+    ],
+    "hook_points": [
+      "analytics.go (new)",
+      "service.go (8 event hooks)",
+      "main.go (session lifecycle)",
+      "Settings.svelte (opt-in toggle)",
+      "README.md (privacy disclaimer)"
+    ],
+    "privacy_model": "opt-in, zero-by-default, no PII",
+    "title": "jobdash-analytics-plan"
+  },
+  "event_type": "bloom",
+  "geological_metaphor": "Sediment deposition - evolutionary evidence",
+  "timestamp": "2026-05-25T00:11:45Z"
+}
