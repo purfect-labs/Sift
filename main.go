@@ -19,6 +19,10 @@ func main() {
 		log.Fatal("DB init failed:", err)
 	}
 
+	// Initialize analytics (reads POSTHOG_API_KEY + POSTHOG_ANALYTICS_ENABLED from .env)
+	InitAnalytics(svc.config)
+	defer CloseAnalytics()
+
 	app := application.New(application.Options{
 		Name:        "JobDash",
 		Description: "AI-powered job search & application tracker",

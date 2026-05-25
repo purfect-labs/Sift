@@ -105,6 +105,15 @@ SERP_API_KEY=your_serpapi_key
 
 All job data is stored in `~/.jobdash/jobs.db` (SQLite, auto-created on first run).
 
+## Privacy & Analytics
+
+JobDash includes **optional, anonymous usage analytics** via PostHog. Disabled by default.
+
+**What we track (when enabled):** feature usage (scrapes, pipeline changes, settings), session duration, view navigation.
+**What we never track:** resume content, job descriptions, company names, salary data, file paths, or any personally identifiable information.
+
+To enable, set `POSTHOG_API_KEY=your_key` in `~/.jobdash/.env` and toggle Analytics On in Settings.
+
 ## Architecture
 
 ```

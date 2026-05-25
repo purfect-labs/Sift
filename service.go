@@ -15,12 +15,13 @@ import (
 )
 
 type Config struct {
-	SerpAPIKey string   `json:"serpapi_key"`
-	Location   string   `json:"location"`
-	Queries    []string `json:"queries"`
-	ResumePath string   `json:"resume_path"`
-	ResumeText string   `json:"resume_text"`
-	Keywords   []string `json:"keywords"`
+	SerpAPIKey       string   `json:"serpapi_key"`
+	Location         string   `json:"location"`
+	Queries          []string `json:"queries"`
+	ResumePath       string   `json:"resume_path"`
+	ResumeText       string   `json:"resume_text"`
+	Keywords         []string `json:"keywords"`
+	AnalyticsEnabled bool     `json:"analytics_enabled"`
 }
 
 type JobService struct {
@@ -80,6 +81,11 @@ func (s *JobService) Init() error {
 		s.config.SerpAPIKey = key
 	}
 
+	// Read analytics opt-in setting
+	if v := env["POSTHOG_ANALYTICS_ENABLED"]; v == "true" {
+		s.config.AnalyticsEnabled = true
+	}
+
 	kw, _ := db.LoadKeywords("resume")
 	if len(kw) > 0 {
 		s.keywords = kw
@@ -92,6 +98,9 @@ func (s *JobService) Init() error {
 		s.config.Location = v
 	}
 
+	// Fire app opened event after successful init
+	TrackEvent("app_opened", nil)
+
 	return nil
 }
 
@@ -100,6 +109,14 @@ func (s *JobService) GetJobs(status string) ([]db.Job, error) {
 }
 
 func (s *JobService) UpdateStatus(id, status string) error {
+	// Look up old status before updating for analytics
+	oldStatus, _ := db.GetJobStatus(id)
+	if oldStatus != "" && oldStatus != status {
+		TrackEvent("pipeline_changed", map[string]interface{}{
+			"from_status": oldStatus,
+			"to_status":   status,
+		})
+	}
 	return db.UpdateJobStatus(id, status)
 }
 
@@ -150,6 +167,36 @@ func (s *JobService) SetConfig(key, value string) error {
 
 func (s *JobService) GetConfig() Config {
 	return s.config
+}
+
+// SetAnalyticsEnabled enables or disables anonymous usage analytics.
+// It writes POSTHOG_ANALYTICS_ENABLED to ~/.jobdash/.env and updates the in-memory config.
+func (s *JobService) SetAnalyticsEnabled(enabled bool) error {
+	s.config.AnalyticsEnabled = enabled
+
+	home, _ := os.UserHomeDir()
+	envPath := filepath.Join(home, ".jobdash", ".env")
+	os.MkdirAll(filepath.Dir(envPath), 0700)
+
+	val := "false"
+	if enabled {
+		val = "true"
+	}
+
+	existing, _ := os.ReadFile(envPath)
+	lines := strings.Split(string(existing), "\n")
+	found := false
+	for i, line := range lines {
+		if strings.HasPrefix(strings.TrimSpace(line), "POSTHOG_ANALYTICS_ENABLED=") {
+			lines[i] = "POSTHOG_ANALYTICS_ENABLED=" + val
+			found = true
+			break
+		}
+	}
+	if !found {
+		lines = append(lines, "POSTHOG_ANALYTICS_ENABLED="+val)
+	}
+	return os.WriteFile(envPath, []byte(strings.Join(lines, "\n")), 0600)
 }
 
 func (s *JobService) GetPositions() ([]string, error) {
@@ -281,6 +328,11 @@ func (s *JobService) ScrapeJobs(customQuery string) (*ScrapeResult, error) {
 		location = "Remote"
 	}
 
+	// Track scrape start
+	TrackEvent("scrape_started", map[string]interface{}{
+		"query_count": len(queries),
+	})
+
 	s.log("Queries:")
 	for _, q := range queries {
 		s.log(fmt.Sprintf("  - %s", q))
@@ -298,6 +350,16 @@ func (s *JobService) ScrapeJobs(customQuery string) (*ScrapeResult, error) {
 	s.log(fmt.Sprintf("Found %d new jobs", result.JobsFound))
 	for _, e := range result.Errors {
 		s.log(fmt.Sprintf("WARN: %s", e))
+	}
+
+	// Track scrape completed and jobs saved
+	TrackEvent("scrape_completed", map[string]interface{}{
+		"jobs_found": result.JobsFound,
+	})
+	if result.JobsFound > 0 {
+		TrackEvent("job_saved", map[string]interface{}{
+			"count": result.JobsFound,
+		})
 	}
 
 	// Auto-run Hermes keyword extraction + gap analysis on new jobs
@@ -372,6 +434,10 @@ func (s *JobService) UpdateOffer(id, salary, benefits, equity string) error {
 }
 
 func (s *JobService) GetGapAnalysis(jobID string) (string, error) {
+	TrackEvent("insights_viewed", map[string]interface{}{
+		"type": "gap_analysis",
+	})
+
 	jobs, err := db.GetAllJobs("all")
 	if err != nil {
 		return "", err
@@ -412,6 +478,10 @@ func (s *JobService) GetKeywordStats() ([]scraper.KeywordCount, error) {
 }
 
 func (s *JobService) GetMarketAnalysis() (string, error) {
+	TrackEvent("insights_viewed", map[string]interface{}{
+		"type": "market_analysis",
+	})
+
 	jobs, err := db.GetAllJobs("all")
 	if err != nil {
 		return "", err
@@ -494,6 +564,13 @@ func (s *JobService) FilterRemoteJobs() (*ScrapeResult, error) {
 	}
 
 	s.log(fmt.Sprintf("Pre-filter: %d remote, %d filtered out of %d jobs", remoteCount, notRemoteCount, len(jobs)))
+
+	// Track jobs saved during remote filter
+	if remoteCount > 0 {
+		TrackEvent("job_saved", map[string]interface{}{
+			"count": remoteCount,
+		})
+	}
 
 	// Step 2: Run Hermes on remote jobs for smart keyword extraction
 	if remoteCount > 0 {

@@ -171,6 +171,16 @@ func GetAllJobs(status string) ([]Job, error) {
 	return jobs, nil
 }
 
+// GetJobStatus returns the current status of a job by ID.
+func GetJobStatus(id string) (string, error) {
+	var status string
+	err := DB.QueryRow(`SELECT status FROM jobs WHERE id = ?`, id).Scan(&status)
+	if err != nil {
+		return "", err
+	}
+	return status, nil
+}
+
 func UpdateJobStatus(id, status string) error {
 	now := time.Now().Format(time.RFC3339)
 	_, err := DB.Exec(`UPDATE jobs SET status = ?, updated_at = ? WHERE id = ?`, status, now, id)

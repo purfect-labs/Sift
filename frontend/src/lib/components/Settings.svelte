@@ -3,17 +3,26 @@
   import { Dialogs } from '@wailsio/runtime';
   import { JobService } from '../../../bindings/jobdash';
 
-  let config = { serpapi_key: '', location: 'Remote', resume_path: '', keywords: [] };
+  let config = { serpapi_key: '', location: 'Remote', resume_path: '', keywords: [], analytics_enabled: false };
   let saved = false;
   let extracting = false;
   let extractResult = '';
   let extractLogs = [];
+  let analyticsEnabled = false;
 
   onMount(() => {
     JobService.GetConfig()
-      .then(c => { if (c) config = c; })
+      .then(c => { if (c) { config = c; analyticsEnabled = c.analytics_enabled || false; } })
       .catch(e => console.error(e));
   });
+
+  function toggleAnalytics() {
+    analyticsEnabled = !analyticsEnabled;
+    JobService.SetAnalyticsEnabled(analyticsEnabled)
+      .then(() => JobService.GetConfig())
+      .then(c => { if (c) config = c; })
+      .catch(e => { console.error(e); analyticsEnabled = !analyticsEnabled; });
+  }
 
   function saveConfig() {
     JobService.SetConfig('location', config.location)
@@ -59,6 +68,23 @@
     <span class="env-msg" class:ok={config.serpapi_key} class:err={!config.serpapi_key}>
       {config.serpapi_key ? '✓ Key saved' : '✗ Paste your SerpAPI key above'}
     </span>
+  </div>
+
+  <div class="setting-group env-status">
+    <label>Usage Analytics</label>
+    <p class="hint">Help improve JobDash with anonymous feature usage stats. Never includes your resume, job listings, or personal data.</p>
+    <div class="toggle-row">
+      <span class="toggle-label">{analyticsEnabled ? 'Enabled' : 'Disabled'}</span>
+      <button
+        class="toggle-switch"
+        class:active={analyticsEnabled}
+        on:click={toggleAnalytics}
+        role="switch"
+        aria-checked={analyticsEnabled}
+      >
+        <span class="toggle-knob"></span>
+      </button>
+    </div>
   </div>
 
   <div class="setting-group">
@@ -126,6 +152,12 @@
   .env-msg { font-size: 12px; }
   .env-msg.ok { color: #66bb6a; }
   .env-msg.err { color: #ef5350; }
+  .toggle-row { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+  .toggle-label { font-size: 12px; color: #888; }
+  .toggle-switch { position: relative; width: 44px; height: 24px; border-radius: 12px; border: none; background: #1e2240; cursor: pointer; transition: background 0.2s; }
+  .toggle-switch.active { background: #2a3a8a; }
+  .toggle-knob { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: #ccc; transition: transform 0.2s; }
+  .toggle-switch.active .toggle-knob { transform: translateX(20px); background: #ccd5ff; }
   .api-key-row { display: flex; gap: 8px; }
   .api-key-input { flex: 1; }
   .btn-save-key { background: #2a3a8a; color: #ccd5ff; padding: 8px 14px; }
