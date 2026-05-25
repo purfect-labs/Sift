@@ -1,0 +1,35 @@
+{
+  "commit_author": "bloom-agent",
+  "context": {
+    "branch": "feat/analytics-opt-in",
+    "description": "PostHog analytics opt-in feature implemented by Blossom via Petal mitosis delegation",
+    "events_wired": [
+      "app_opened",
+      "scrape_started",
+      "scrape_completed",
+      "job_saved",
+      "pipeline_changed",
+      "insights_viewed (gap_analysis + market_analysis)"
+    ],
+    "files_changed": [
+      "analytics.go (new)",
+      "service.go",
+      "main.go",
+      "db/jobs.go",
+      "Settings.svelte",
+      "README.md",
+      "go.mod",
+      "go.sum"
+    ],
+    "privacy": "opt-in, zero-by-default, no PII",
+    "status": "complete",
+    "title": "jobdash-analytics-implemented",
+    "verification": {
+      "build": "pass",
+      "tests": "pass (cached)"
+    }
+  },
+  "event_type": "bloom",
+  "geological_metaphor": "Sediment deposition - evolutionary evidence",
+  "timestamp": "2026-05-25T00:24:20Z"
+}
