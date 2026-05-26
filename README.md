@@ -36,7 +36,7 @@ Built with [Wails v3](https://v3.wails.io/) (Go + Svelte). Project intelligence 
 
 ## Download
 
-Pre-built binaries for macOS, Linux, and Windows from [Releases](https://github.com/purfect-labs/sift/releases).
+Pre-built binaries for macOS, Linux, and Windows from [Releases](https://github.com/purfect-labs/jobdash/releases).
 
 ## Quick Start
 
@@ -60,7 +60,7 @@ hermes model                    # set default model (e.g. deepseek-chat)
 **SerpAPI setup** (one-time):
 1. Sign up at [serpapi.com](https://serpapi.com) — free tier gives 100 searches/month
 2. Copy your API key from the dashboard
-3. Paste it in Sift Settings → SerpAPI Key, or add to `~/.sift/.env`:
+3. Paste it in Sift Settings → SerpAPI Key, or add to `~/.jobdash/.env`:
    ```
    SERP_API_KEY=your_key_here
    ```
