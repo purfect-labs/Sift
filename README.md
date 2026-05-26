@@ -60,7 +60,7 @@ hermes model                    # set default model (e.g. deepseek-chat)
 **SerpAPI setup** (one-time):
 1. Sign up at [serpapi.com](https://serpapi.com) — free tier gives 100 searches/month
 2. Copy your API key from the dashboard
-3. Paste it in Sift Settings → SerpAPI Key, or add to `~/..env`:
+3. Paste it in Sift Settings → SerpAPI Key, or add to `~/.sift/.env`:
    ```
    SERP_API_KEY=your_key_here
    ```
@@ -98,7 +98,7 @@ The frontend must be built first (`npm run build`) so it's embedded in the Go bi
 
 ## Configuration
 
-Paste your SerpAPI key in the Settings panel, or create `~/..env`:
+Paste your SerpAPI key in the Settings panel, or create `~/.sift/.env`:
 ```
 SERP_API_KEY=your_serpapi_key
 ```
