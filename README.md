@@ -7,7 +7,7 @@
 
 AI-powered job search and application tracker. Scrape jobs, extract resume keywords with AI, match and filter listings, track your pipeline from discovery to offer — all in a native desktop app.
 
-Built with [Wails v3](https://v3.wails.io/) (Go + Svelte). Project intelligence managed by [Evo](https://github.com/purfect-labs/evo) — the engineering brain for AI-first teams.
+Built with [Wails v3](https://v3.wails.io/) (Go + Svelte). Project intelligence managed by [Evo](https://dev.evolabz.org/) — the engineering brain for AI-first teams.
 
 ## Features
 
@@ -36,7 +36,7 @@ Built with [Wails v3](https://v3.wails.io/) (Go + Svelte). Project intelligence 
 
 ## Download
 
-Pre-built binaries for macOS, Linux, and Windows from [Releases](https://github.com/purfect-labs//releases).
+Pre-built binaries for macOS, Linux, and Windows from [Releases](https://github.com/purfect-labs/sift/releases).
 
 ## Quick Start
 
@@ -103,7 +103,7 @@ Paste your SerpAPI key in the Settings panel, or create `~/..env`:
 SERP_API_KEY=your_serpapi_key
 ```
 
-All job data is stored in `~/.jobdash/jobs.db` (SQLite, auto-created on first run).
+All job data is stored in `~/.sift/jobs.db` (SQLite, auto-created on first run).
 
 ## Architecture
 
