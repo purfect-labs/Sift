@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"jobdash/db"
-	"jobdash/scraper"
+	"sift/db"
+	"sift/scraper"
 
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
@@ -68,14 +68,14 @@ func (s *JobService) log(msg string) {
 
 func (s *JobService) Init() error {
 	home, _ := os.UserHomeDir()
-	dbPath := filepath.Join(home, ".jobdash", "jobs.db")
+	dbPath := filepath.Join(home, ".sift", "jobs.db")
 	os.MkdirAll(filepath.Dir(dbPath), 0700)
 
 	if err := db.Init(dbPath); err != nil {
 		return err
 	}
 
-	env := loadEnv(filepath.Join(home, ".jobdash", ".env"))
+	env := loadEnv(filepath.Join(home, ".sift", ".env"))
 	if key := env["SERP_API_KEY"]; key != "" {
 		s.config.SerpAPIKey = key
 	}
@@ -127,7 +127,7 @@ func (s *JobService) SetConfig(key, value string) error {
 	case "serpapi_key":
 		s.config.SerpAPIKey = value
 		home, _ := os.UserHomeDir()
-		envPath := filepath.Join(home, ".jobdash", ".env")
+		envPath := filepath.Join(home, ".sift", ".env")
 		os.MkdirAll(filepath.Dir(envPath), 0700)
 		// Read existing .env, update SERP_API_KEY line, write back
 		existing, _ := os.ReadFile(envPath)
@@ -260,7 +260,7 @@ func (s *JobService) ScrapeJobs(customQuery string) (*ScrapeResult, error) {
 	}
 
 	if s.config.SerpAPIKey == "" {
-		return &ScrapeResult{Errors: []string{"No SerpAPI key. Add SERP_API_KEY=your-key to ~/.jobdash/.env"}}, nil
+		return &ScrapeResult{Errors: []string{"No SerpAPI key. Add SERP_API_KEY=your-key to ~/.sift/.env"}}, nil
 	}
 
 	queries := s.config.Queries

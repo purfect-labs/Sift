@@ -1,4 +1,4 @@
-# jobdash — Implementation Status
+# sift — Implementation Status
 
 ## Core
 - ✅ Wails v3 app bootstrap (completed: 2026-05-20)

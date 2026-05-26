@@ -1,6 +1,6 @@
-# Contributing to JobDash
+# Contributing to Sift
 
-JobDash is open source and freely given to the world. We welcome contributions but keep it simple.
+Sift is open source and freely given to the world. We welcome contributions but keep it simple.
 
 ## How to Contribute
 

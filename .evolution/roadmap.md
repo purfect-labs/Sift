@@ -1,4 +1,4 @@
-# jobdash — Roadmap
+# sift — Roadmap
 
 ## Phase A — Foundation
 
@@ -88,7 +88,7 @@ Created: 2026-05-24
 Started: 2026-05-24
 Completed: 2026-05-24
 Assigned: @shawnM
-SerpAPI key paste input in Settings. SetConfig writes to ~/.jobdash/.env. Password-masked input.
+SerpAPI key paste input in Settings. SetConfig writes to ~/.sift/.env. Password-masked input.
 
 ### C.4-shawnM Hermes + Python Path Fix `completed` <!-- UUID: c1d2e3f4-4444-4ccc-4444-444444444444 -->
 Created: 2026-05-24

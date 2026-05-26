@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #0a0c14; font-family: "Inter", sans-serif; }
+      .scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+      .bg-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; object-position: top; opacity: 0; background: #0a0c14; }
+      .overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(10,12,20,0.95)); padding: 200px 100px 60px; }
+      .title { font-size: 52px; font-weight: 700; color: #e8e8f0; letter-spacing: -0.02em; margin-bottom: 12px; }
+      .subtitle { font-size: 22px; color: #8b9dff; font-weight: 500; margin-bottom: 20px; }
+      .pipeline { display: flex; gap: 0; }
+      .stage { padding: 12px 28px; font-size: 16px; font-weight: 600; color: #aaa; border: 1px solid #1e2240; background: rgba(13,15,26,0.8); }
+      .stage.active { color: #8b9dff; border-color: #2a3a8a; background: rgba(26,31,53,0.8); }
+      .stage-arrow { color: #333; font-size: 20px; padding: 12px 4px; }
+    </style>
+  </head>
+  <body>
+    <div class="scene" data-composition-id="scene4-pipeline" data-width="1920" data-height="1080">
+      <img class="bg-image" id="bg" src="../assets/sift-mainjobs-matrix-expanded.png" />
+      <div class="overlay">
+        <div class="title" id="title" style="opacity: 0;">Track Every Application</div>
+        <div class="subtitle" id="subtitle" style="opacity: 0;">Filter remote. Analyze gaps. No spreadsheet needed.</div>
+        <div class="pipeline">
+          <span class="stage" id="p1" style="opacity: 0;">New</span>
+          <span class="stage-arrow">→</span>
+          <span class="stage" id="p2" style="opacity: 0;">Saved</span>
+          <span class="stage-arrow">→</span>
+          <span class="stage active" id="p3" style="opacity: 0;">Applied</span>
+          <span class="stage-arrow">→</span>
+          <span class="stage" id="p4" style="opacity: 0;">Interviewing</span>
+          <span class="stage-arrow">→</span>
+          <span class="stage" id="p5" style="opacity: 0;">Offer</span>
+        </div>
+      </div>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.to("#bg", { opacity: 1, duration: 0.5, ease: "power2.out" }, 0);
+      tl.fromTo("#title", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.5);
+      tl.fromTo("#subtitle", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 1.2);
+      tl.to("#p1", { opacity: 1, duration: 0.25 }, 2.0);
+      tl.to("#p2", { opacity: 1, duration: 0.25 }, 2.3);
+      tl.to("#p3", { opacity: 1, duration: 0.3 }, 2.6);
+      tl.to("#p4", { opacity: 1, duration: 0.25 }, 2.9);
+      tl.to("#p5", { opacity: 1, duration: 0.25 }, 3.2);
+      tl.to("#title", { opacity: 0, duration: 0.3 }, 6.2);
+      tl.to("#subtitle", { opacity: 0, duration: 0.3 }, 6.2);
+      tl.to("#bg", { opacity: 0, duration: 0.4 }, 6.4);
+      window.__timelines["scene4-pipeline"] = tl;
+    </script>
+  </body>
+</html>

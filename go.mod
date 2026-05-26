@@ -1,4 +1,4 @@
-module jobdash
+module sift
 
 go 1.25.0
 

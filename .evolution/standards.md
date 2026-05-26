@@ -1,7 +1,7 @@
-# jobdash — Coding Standards
+# sift — Coding Standards
 
 ## Language Conventions
-- **Import ordering**: stdlib → external → internal (`jobdash/db`, `jobdash/scraper`)
+- **Import ordering**: stdlib → external → internal (`sift/db`, `sift/scraper`)
 - **Error handling**: Always return errors, use `fmt.Errorf` with context. Log via `service.log()` for UI visibility.
 - **Naming**: PascalCase for exported types/methods, camelCase for unexported. Service methods match Wails binding convention.
 - **Comments**: Document exported functions. Internal logic self-documents via clear naming.
@@ -20,13 +20,13 @@
 - **Tests**: `*_test.go` alongside source
 
 ## Git & Collaboration
-- **Branch naming**: `feat/<ticket>-jobdash`, `fix/<ticket>-jobdash`
+- **Branch naming**: `feat/<ticket>-sift`, `fix/<ticket>-sift`
 - **Commit format**: `type(scope): description` — e.g., `feat(scraper): add rate limiting`
 - **PR descriptions**: Link related issues, describe testing done
 - **Branch tiers**: `feat/*` → `main` (single-branch workflow)
 
 ## Config Rules
-- **No hardcoded values**: All API keys, paths, defaults in `~/.jobdash/.env` or `db/config` table
+- **No hardcoded values**: All API keys, paths, defaults in `~/.sift/.env` or `db/config` table
 - **Environment-aware**: `SERP_API_KEY` from env file, never in source
 - **Sensible defaults**: Location defaults to "Remote", queries default to `DefaultQueries()`
 

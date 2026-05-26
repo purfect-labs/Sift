@@ -1,8 +1,8 @@
-# jobdash — Product Specification
+# sift — Product Specification
 
 ## Executive Summary
 
-Jobdash is an AI-powered job search and application tracking desktop app (Wails v3, Go + Svelte). It scrapes job listings via SerpAPI, uses Hermes (local LLM) for resume keyword extraction and gap analysis, stores everything in embedded SQLite, and provides a Svelte dashboard for managing the pipeline from discovery to offer.
+Sift is an AI-powered job search and application tracking desktop app (Wails v3, Go + Svelte). It scrapes job listings via SerpAPI, uses Hermes (local LLM) for resume keyword extraction and gap analysis, stores everything in embedded SQLite, and provides a Svelte dashboard for managing the pipeline from discovery to offer.
 
 ## Problem
 
@@ -46,12 +46,12 @@ Job seekers manually search across multiple platforms, copy-paste listings, and 
 
 ## Configuration
 
-`~/.jobdash/.env`:
+`~/.sift/.env`:
 ```
 SERP_API_KEY=your_serpapi_key
 ```
 
-`~/.jobdash/jobs.db` — SQLite database (auto-created on first run)
+`~/.sift/jobs.db` — SQLite database (auto-created on first run)
 
 ## Core Concepts
 

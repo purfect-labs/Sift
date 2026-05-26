@@ -1,13 +1,13 @@
 [Desktop Entry]
 Version=1.0
 Name=My Product
-Comment=A jobdash application
+Comment=Sift — AI job matching that never leaves your machine
 # The Exec line includes %u to pass the URL to the application
-Exec=/usr/local/bin/jobdash %u
+Exec=/usr/local/bin/sift %u
 Terminal=false
 Type=Application
-Icon=jobdash
+Icon=sift
 Categories=Utility;
-StartupWMClass=jobdash
+StartupWMClass=sift
 
  

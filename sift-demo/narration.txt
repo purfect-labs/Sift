@@ -1,0 +1,6 @@
+Job hunting is chaos. We fixed that.
+Sift is an AI-powered job search and application tracker. Your resume, your pipeline, your data — all local.
+Upload your resume. Hermes AI extracts keywords. Then Google Jobs scraping finds matches — scored and ranked against your skills.
+Track every application through your pipeline. New to saved to applied to offer. Filter remote. Analyze gaps. No spreadsheet needed.
+Open source. SQLite on your machine. No cloud accounts. Your job search stays private.
+[measured] Developed by PurfectLabs. Download Sift now.
