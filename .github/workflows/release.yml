@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   build:
-    name: jobdash ${{ matrix.os }}-${{ matrix.arch }}
+    name: sift ${{ matrix.os }}-${{ matrix.arch }}
     runs-on: ${{ matrix.runner }}
     strategy:
       fail-fast: false
@@ -75,7 +75,7 @@ jobs:
         run: |
           go build -tags production -trimpath -buildvcs=false \
             -ldflags="-s -w -X main.version=${{ steps.version.outputs.tag }}" \
-            -o jobdash-${{ steps.version.outputs.tag }}-${{ matrix.os }}-${{ matrix.arch }} .
+            -o sift-${{ steps.version.outputs.tag }}-${{ matrix.os }}-${{ matrix.arch }} .
         env:
           GOOS: ${{ matrix.os }}
           GOARCH: ${{ matrix.arch }}
@@ -89,7 +89,7 @@ jobs:
         run: |
           go build -tags production -trimpath -buildvcs=false \
             -ldflags="-s -w -X main.version=${{ steps.version.outputs.tag }}" \
-            -o jobdash-${{ steps.version.outputs.tag }}-${{ matrix.os }}-${{ matrix.arch }} .
+            -o sift-${{ steps.version.outputs.tag }}-${{ matrix.os }}-${{ matrix.arch }} .
         env:
           GOOS: ${{ matrix.os }}
           GOARCH: ${{ matrix.arch }}
@@ -101,7 +101,7 @@ jobs:
         run: |
           go build -tags production -trimpath -buildvcs=false \
             -ldflags="-s -w -X main.version=${{ steps.version.outputs.tag }}" \
-            -o jobdash-${{ steps.version.outputs.tag }}-windows-amd64.exe .
+            -o sift-${{ steps.version.outputs.tag }}-windows-amd64.exe .
         env:
           GOOS: windows
           GOARCH: amd64
@@ -110,26 +110,26 @@ jobs:
       - name: Package (macOS .zip)
         if: runner.os == 'macOS'
         run: |
-          BINARY=jobdash-${{ steps.version.outputs.tag }}-${{ matrix.os }}-${{ matrix.arch }}
+          BINARY=sift-${{ steps.version.outputs.tag }}-${{ matrix.os }}-${{ matrix.arch }}
           mkdir -p "$BINARY.app/Contents/MacOS"
           mkdir -p "$BINARY.app/Contents/Resources"
           cp build/darwin/icons.icns "$BINARY.app/Contents/Resources/" 2>/dev/null || true
           cp build/darwin/Info.plist "$BINARY.app/Contents/" 2>/dev/null || true
-          cp "$BINARY" "$BINARY.app/Contents/MacOS/jobdash"
+          cp "$BINARY" "$BINARY.app/Contents/MacOS/sift"
           codesign --force --deep --sign - "$BINARY.app"
           zip -r "$BINARY.zip" "$BINARY.app"
 
       - name: Package (Linux .tar.gz)
         if: runner.os == 'Linux'
         run: |
-          BINARY=jobdash-${{ steps.version.outputs.tag }}-${{ matrix.os }}-${{ matrix.arch }}
+          BINARY=sift-${{ steps.version.outputs.tag }}-${{ matrix.os }}-${{ matrix.arch }}
           tar czf "$BINARY.tar.gz" "$BINARY"
 
       - name: Package (Windows .zip)
         if: runner.os == 'Windows'
         shell: bash
         run: |
-          BINARY="jobdash-${{ steps.version.outputs.tag }}-windows-amd64"
+          BINARY="sift-${{ steps.version.outputs.tag }}-windows-amd64"
           7z a "${BINARY}.zip" "${BINARY}.exe"
 
       - name: Upload Release Asset
@@ -141,10 +141,10 @@ jobs:
           set -euo pipefail
           tag="${{ steps.version.outputs.tag }}"
           # Create the release (no tag exists yet)
-          gh release create "$tag" --title "JobDash $tag" \
+          gh release create "$tag" --title "Sift $tag" \
             --notes "Auto-built from main@${{ steps.version.outputs.sha }}" \
             2>/dev/null || true
-          for f in jobdash-$tag-*; do
+          for f in sift-$tag-*; do
             [ -f "$f" ] || continue
             echo "Uploading: $f"
             gh release upload "$tag" "$f" --clobber

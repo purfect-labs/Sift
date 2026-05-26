@@ -20,7 +20,7 @@
   <nav class="sidebar">
     <div class="logo">
       <span class="logo-icon">&#9889;</span>
-      <span class="logo-text">JobDash</span>
+      <span class="logo-text">Sift</span>
     </div>
     <button class="nav-btn" class:active={view === 'dashboard'} on:click={() => view = 'dashboard'}>
       <span class="nav-icon">&#9632;</span> Jobs

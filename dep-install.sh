@@ -2,7 +2,7 @@
 set -e
 
 OS="$(uname -s)"
-echo "JobDash — dependency installer"
+echo "Sift — dependency installer"
 echo "OS: $OS"
 echo ""
 

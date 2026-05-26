@@ -2,8 +2,8 @@
 set -e
 
 # Build configuration
-APP_NAME="jobdash"
-BUNDLE_ID="com.example.jobdash"
+APP_NAME="sift"
+BUNDLE_ID="com.example.sift"
 VERSION="0.1.0"
 BUILD_NUMBER="0.1.0"
 BUILD_DIR="build/ios"

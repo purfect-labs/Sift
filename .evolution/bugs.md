@@ -1,4 +1,4 @@
-# jobdash — Bug Log
+# sift — Bug Log
 
 ## Active Bugs
 

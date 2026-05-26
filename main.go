@@ -20,7 +20,7 @@ func main() {
 	}
 
 	app := application.New(application.Options{
-		Name:        "JobDash",
+		Name:        "Sift",
 		Description: "AI-powered job search & application tracker",
 		Services: []application.Service{
 			application.NewService(svc),
@@ -40,7 +40,7 @@ func main() {
 	svc.app = app
 
 	app.Window.NewWithOptions(application.WebviewWindowOptions{
-		Title:  "JobDash",
+		Title:  "Sift",
 		Width:  1200,
 		Height: 800,
 		MinWidth:  900,

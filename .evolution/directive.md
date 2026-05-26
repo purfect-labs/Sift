@@ -1,8 +1,8 @@
-# jobdash — Agent Directive
+# sift — Agent Directive
 
 ## 0. Bootstrap Flow
 ```bash
-cd ~/code/plabs/jobdash/jobdash
+cd ~/code/plabs/jobdash/sift
 wails3 dev                    # run in dev mode
 # or
 task build                    # production build
@@ -18,15 +18,15 @@ task build                    # production build
 7. **`db/jobs.go`** — SQLite schema + CRUD
 
 ## 2. Project Principles
-1. **SQLite-only, zero external DB** — `modernc.org/sqlite` (pure Go, no CGO). DB at `~/.jobdash/jobs.db`. No Postgres, no Redis.
+1. **SQLite-only, zero external DB** — `modernc.org/sqlite` (pure Go, no CGO). DB at `~/.sift/jobs.db`. No Postgres, no Redis.
 2. **Hermes is the AI brain** — resume parsing, keyword extraction, gap analysis, market analysis, position recommendations all go through `hermes -z <prompt>` shell calls. Never replace with direct LLM API calls.
-3. **SerpAPI for job sourcing** — Google Jobs via SerpAPI. Config at `~/.jobdash/.env` (`SERP_API_KEY`). Remote-first filtering with keyword scoring.
+3. **SerpAPI for job sourcing** — Google Jobs via SerpAPI. Config at `~/.sift/.env` (`SERP_API_KEY`). Remote-first filtering with keyword scoring.
 4. **Wails v3 service pattern** — `JobService` implements `application.Service`. Methods exposed to frontend via Wails bindings. All state lives on the service struct.
 5. **Match scoring is local** — `computeMatchScore()` uses 4-level keyword matching (exact phrase → token subset → single token → substring). No AI needed for scoring.
 6. **Remote-first filtering** — positive/negative keyword lists classify jobs as remote/not_remote before Hermes analysis.
 
 ## 3. How to Make Changes
-- **Before**: `git checkout -b feat/<ticket>-jobdash` from main
+- **Before**: `git checkout -b feat/<ticket>-sift` from main
 - **During**: Keep `service.go` methods as Wails-bound service methods. New AI features use `hermes -z` pattern. New scrapers follow `SearchMultiple` pattern.
 - **After**: `wails3 dev` to verify. `task build` for production.
 
@@ -40,7 +40,7 @@ task build                    # production build
 
 ## 5. Operational Reference
 - **Startup**: `service.Init()` → SQLite init → load env → load keywords → ready
-- **Config**: `~/.jobdash/.env` for `SERP_API_KEY`, `~/.jobdash/jobs.db` for everything else
+- **Config**: `~/.sift/.env` for `SERP_API_KEY`, `~/.sift/jobs.db` for everything else
 - **Secrets**: Never commit `.env` files. API key read from home dir only.
 - **Dependencies**: Go 1.25, Wails v3 alpha, modernc.org/sqlite, Python 3 (pymupdf for PDF)
 
@@ -63,4 +63,4 @@ task build                    # production build
 - Status: `idea` → `speccing` → `spec` → `in-progress` → `completed`
 - Ticket format: `### X.N-shawnM Title \`status\``
 - All dates ISO 8601. NEVER leave `YYYY-MM-DD`.
-- Branch: `feat/<ticket>-jobdash` from `main`
+- Branch: `feat/<ticket>-sift` from `main`

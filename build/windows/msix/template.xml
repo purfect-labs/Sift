@@ -8,7 +8,7 @@
         AllowPromptForPassword="false">
     </Settings>
     <Installer
-        Path="jobdash"
+        Path="sift"
         Arguments=""
         InstallLocation="C:\Program Files\My Company\My Product">
     </Installer>
@@ -18,17 +18,17 @@
         PublisherName="CN=My Company"
         PublisherDisplayName="My Company"
         Version="0.1.0.0"
-        PackageDescription="A jobdash application">
+        PackageDescription="Sift — AI job matching that never leaves your machine">
         <Capabilities>
             <Capability Name="runFullTrust" />
             
         </Capabilities>
         <Applications>
             <Application
-                Id="com.example.jobdash"
-                Description="A jobdash application"
+                Id="com.example.sift"
+                Description="Sift — AI job matching that never leaves your machine"
                 DisplayName="My Product"
-                ExecutableName="jobdash"
+                ExecutableName="sift"
                 EntryPoint="Windows.FullTrustApplication">
                 
             </Application>
@@ -43,11 +43,11 @@
             <Framework>false</Framework>
             <DisplayName>My Product</DisplayName>
             <PublisherDisplayName>My Company</PublisherDisplayName>
-            <Description>A jobdash application</Description>
+            <Description>Sift — AI job matching that never leaves your machine</Description>
             <Logo>Assets\AppIcon.png</Logo>
         </Properties>
     </PackageInformation>
-    <SaveLocation PackagePath="jobdash.msix" />
+    <SaveLocation PackagePath="sift.msix" />
     <PackageIntegrity>
         <CertificatePath></CertificatePath>
     </PackageIntegrity>

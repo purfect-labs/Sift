@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"jobdash/db"
+	"sift/db"
 )
 
 type ScrapeResult struct {

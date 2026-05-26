@@ -1,10 +1,10 @@
-# jobdash
+# sift
 
 AI-powered job search and application tracker. Scrape jobs via SerpAPI, extract resume keywords with Hermes AI, match and filter listings, track your pipeline from discovery to offer — all in a native desktop app.
 
 ## Quick Start
 ```bash
-cd jobdash
+cd sift
 wails3 dev                     # development mode
 task build                     # production build
 task run:server                # headless server mode
@@ -39,8 +39,8 @@ jobdash/
 ```
 
 ## Configuration
-- `~/.jobdash/.env` — `SERP_API_KEY=your_key`
-- `~/.jobdash/jobs.db` — SQLite database (auto-created)
+- `~/.sift/.env` — `SERP_API_KEY=your_key`
+- `~/.sift/jobs.db` — SQLite database (auto-created)
 
 ## Building
 ```bash

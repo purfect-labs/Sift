@@ -103,7 +103,7 @@
   <div class="info-box">
     <h3>How it works</h3>
     <ul>
-      <li>API key in <code>jobdash/.env</code> — never touches the UI</li>
+      <li>API key in <code>.sift/.env</code> — never touches the UI</li>
       <li>Hermes AI reads your resume PDF and extracts keywords (saved to DB)</li>
       <li>Set target job titles on Dashboard — or let Hermes recommend them</li>
       <li>Scraping uses your positions as search queries across Google Jobs</li>
