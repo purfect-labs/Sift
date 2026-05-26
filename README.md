@@ -2,7 +2,7 @@
 
 [![Go Version](https://img.shields.io/badge/Go-1.25+-00ADD8?logo=go)](https://go.dev/dl/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Release](https://img.shields.io/badge/release-v1-blue)](https://github.com/purfect-labs/Sift/releases)
+[![Release](https://img.shields.io/badge/release-v1-blue)](https://github.com/purfect-labs/jobdash/releases)
 [![Built with Evo](https://img.shields.io/badge/built%20with-Evo-FFD600)](https://github.com/purfect-labs/evo)
 
 AI-powered job search and application tracker. Scrape jobs, extract resume keywords with AI, match and filter listings, track your pipeline from discovery to offer — all in a native desktop app.
@@ -36,7 +36,7 @@ Built with [Wails v3](https://v3.wails.io/) (Go + Svelte). Project intelligence 
 
 ## Download
 
-Pre-built binaries for macOS, Linux, and Windows from [Releases](https://github.com/purfect-labs/Sift/releases).
+Pre-built binaries for macOS, Linux, and Windows from [Releases](https://github.com/purfect-labs//releases).
 
 ## Quick Start
 
@@ -60,7 +60,7 @@ hermes model                    # set default model (e.g. deepseek-chat)
 **SerpAPI setup** (one-time):
 1. Sign up at [serpapi.com](https://serpapi.com) — free tier gives 100 searches/month
 2. Copy your API key from the dashboard
-3. Paste it in Sift Settings → SerpAPI Key, or add to `~/.Sift/.env`:
+3. Paste it in Sift Settings → SerpAPI Key, or add to `~/..env`:
    ```
    SERP_API_KEY=your_key_here
    ```
@@ -98,12 +98,12 @@ The frontend must be built first (`npm run build`) so it's embedded in the Go bi
 
 ## Configuration
 
-Paste your SerpAPI key in the Settings panel, or create `~/.Sift/.env`:
+Paste your SerpAPI key in the Settings panel, or create `~/..env`:
 ```
 SERP_API_KEY=your_serpapi_key
 ```
 
-All job data is stored in `~/.Sift/jobs.db` (SQLite, auto-created on first run).
+All job data is stored in `~/.jobdash/jobs.db` (SQLite, auto-created on first run).
 
 ## Architecture
 
