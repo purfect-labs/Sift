@@ -9,7 +9,7 @@ AI-powered job search and application tracker. Scrape jobs, extract resume keywo
 
 Built with [Wails v3](https://v3.wails.io/) (Go + Svelte). Project intelligence managed by [Evo](https://github.com/purfect-labs/evo) — the engineering brain for AI-first teams.
 
-— [sift.purfectlabs.com](https://sift.purfectlabs.com) · [GitHub](https://github.com/purfect-labs/sift) —
+— [sift.purfectlabs.com](https://sift.purfectlabs.com) · [GitHub](https://github.com/purfect-labs/sift) · [Purfect AI](https://purfect.ai) —
 
 ## Features
 
